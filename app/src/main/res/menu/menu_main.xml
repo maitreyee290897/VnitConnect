@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+tools:context="com.example.hp.myapp.MainActivity">
+<item
+    android:id="@+id/profile"
+    android:orderInCategory="100"
+    android:title="My Profile"
+    app:showAsAction="never" />
+<item
+    android:id="@+id/my_questions"
+    android:orderInCategory="100"
+    android:title="My Questions"
+    app:showAsAction="never" />
+
+    <item
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:title="Logout"
+        app:showAsAction="never" />
+</menu>
