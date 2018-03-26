@@ -15,6 +15,11 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
         <activity android:name=".SignupActivity">
 
@@ -25,6 +30,13 @@
         <activity android:name=".ResetPasswordActivity">
 
         </activity>
+        <!--<activity android:name=".SearchableActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+        </activity>-->
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
