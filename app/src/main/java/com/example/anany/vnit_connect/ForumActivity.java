@@ -1,60 +1,143 @@
 package com.example.anany.vnit_connect;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class ForumActivity extends AppCompatActivity {
 
-    private QuestionsAdapter mAdapter;
-    private List<Question> questionList = new ArrayList<>();
+    private static final String TAG = "ForumActivity";
+    private Ques_descAdapter mAdapter;
+    private ArrayList<Ques_desc> questionList;
     private RecyclerView recyclerView;
-    private DatabaseReference mDatabase;
     private Question ques;
+    private String uid, email, name;
+    private FirebaseFirestore db;
     private FirebaseUser user;
-    private String uid;
-    private DatabaseReference usersRef;
+    //private ArrayList<User> mArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forum);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Forum");
 
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        mDatabase = database.getReference("vnit-connect");
-
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        usersRef = mDatabase.child("users");
-
-        recyclerView = findViewById(R.id.recycler_view);
-        mAdapter = new QuestionsAdapter(questionList);
+        //Recycler view setup
+        /*recyclerView = findViewById(R.id.recycler_view);
+        mAdapter = new Ques_descAdapter(questionList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);*/
 
-        prepareMovieData();
-        writeNewQuestion(ques);
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            email = user.getEmail();
+            uid = user.getUid();
+        }
+
+        Query query = db.collection("user").whereEqualTo("email", email);
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                if (documentSnapshots.isEmpty()) {
+                    Log.d(TAG, "onSuccess: LIST EMPTY");
+                    return;
+                }
+                else {
+                    // Convert the whole Query Snapshot to a list
+                    // of objects directly! No need to fetch each
+                    // document.
+                    List<User> types = documentSnapshots.toObjects(User.class);
+                    name = types.get(0).getUsername();
+                }
+            }
+        });
+
+        ArrayList<String> interests = new ArrayList<String>();
+        interests.add("A");
+        interests.add("B");
+        interests.add("C");
+        User user = new User(name, email, interests);
+
+        // Add a new document with a generated ID
+        db.collection("user")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+
+        //db.collection("users").document("user1").set(user);
+        //getListItems();
+
     }
+
+    private void getListItems() {
+        db.collection("ques_desc").get()
+            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot documentSnapshots) {
+                    if (documentSnapshots.isEmpty()) {
+                        Log.d(TAG, "onSuccess: LIST EMPTY");
+                        return;
+                    } else {
+                        // Convert the whole Query Snapshot to a list
+                        // of objects directly! No need to fetch each
+                        // document.
+                        List<Ques_desc> types = documentSnapshots.toObjects(Ques_desc.class);
+
+                        // Add all to your list
+                        questionList.addAll(types);
+                        Log.d(TAG, "onSuccess: " + questionList);
+                    }
+                }
+            })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure (@NonNull Exception e){
+                        Toast.makeText(getApplicationContext(), "Error getting data!!!", Toast.LENGTH_LONG).show();
+                    }
+                });
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,27 +179,4 @@ public class ForumActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareMovieData() {
-        Question question1 = new Question("Q1", "1", "abc");
-        questionList.add(question1);
-
-        Question question2 = new Question("Q2", "2", "xyz");
-        questionList.add(question2);
-
-        writeNewQuestion(question1);
-
-    }
-
-    private void writeNewQuestion(Question ques) {
-        if (user != null) {
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
-            uid = user.getUid();
-        }
-        Map<String, Question> questions = new HashMap<>();
-        questions.put(uid, ques);
-        //mDatabase.child("test-users").child(uid).setValue(ques);
-        usersRef.setValue(questions);
-    }
 }
