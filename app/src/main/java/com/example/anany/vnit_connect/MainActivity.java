@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnChangeEmail, btnChangePassword, btnSendResetEmail, btnRemoveUser,
+    private Button btnChangeEmail, btnChangePassword, btnSendResetEmail, btnRemoveUser, btnForum,
             changeEmail, changePassword, sendEmail, remove, signOut;
 
     private EditText oldEmail, newEmail, password, newPassword;
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         btnChangePassword = (Button) findViewById(R.id.change_password_button);
         btnSendResetEmail = (Button) findViewById(R.id.sending_pass_reset_button);
         btnRemoveUser = (Button) findViewById(R.id.remove_user_button);
+        btnForum = (Button) findViewById(R.id.forum);
         changeEmail = (Button) findViewById(R.id.changeEmail);
         changePassword = (Button) findViewById(R.id.changePass);
         sendEmail = (Button) findViewById(R.id.send);
@@ -214,6 +215,14 @@ public class MainActivity extends AppCompatActivity {
                     oldEmail.setError("Enter email");
                     progressBar.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        btnForum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentRegister = new Intent(getApplicationContext(), ForumActivity.class);
+                startActivity(intentRegister);
             }
         });
 
