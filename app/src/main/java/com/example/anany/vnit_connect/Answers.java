@@ -5,29 +5,30 @@ package com.example.anany.vnit_connect;
  */
 
 public class Answers {
-    private String aid, qid, username;
+    private String username;
+    private int aid, qid;
 
     public Answers(){}
 
-    public Answers(String aid, String qid, String username){
+    public Answers(int aid, int qid, String username){
         this.aid = aid;
         this.qid = qid;
         this.username = username;
     }
 
-    public String getAid() {
+    public int getAid() {
         return aid;
     }
 
-    public void setAid(String aid) {
+    public void setAid(int aid) {
         this.aid = aid;
     }
 
-    public String getQid() {
+    public int getQid() {
         return qid;
     }
 
-    public void setQid(String qid) {
+    public void setQid(int qid) {
         this.qid = qid;
     }
 

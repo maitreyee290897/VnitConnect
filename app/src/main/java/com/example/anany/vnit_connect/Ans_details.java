@@ -5,23 +5,23 @@ package com.example.anany.vnit_connect;
  */
 
 public class Ans_details {
-    private String aid, answer;
-    private int upvote, downvote;
+    private String answer;
+    private int upvote, downvote, aid;
 
     public Ans_details(){}
 
-    public Ans_details(String aid, String answer, int upvote, int downvote){
+    public Ans_details(int aid, String answer, int upvote, int downvote){
         this.aid = aid;
         this.answer = answer;
         this.upvote = upvote;
         this.downvote = downvote;
     }
 
-    public String getAid() {
+    public int getAid() {
         return aid;
     }
 
-    public void setAid(String aid) {
+    public void setAid(int aid) {
         this.aid = aid;
     }
 

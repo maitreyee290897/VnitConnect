@@ -31,7 +31,7 @@ public class Ques_descAdapter extends RecyclerView.Adapter<Ques_descAdapter.MyVi
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Ques_desc question = questionsList.get(position);
-        holder.qid.setText(question.getQid());
+        holder.qid.setText(Integer.toString(question.getQid()));
         holder.question.setText(question.getQuestion());
         //holder.year.setText(question.getTags());
     }
@@ -46,8 +46,8 @@ public class Ques_descAdapter extends RecyclerView.Adapter<Ques_descAdapter.MyVi
 
         public MyViewHolder(View view) {
             super(view);
-            qid = (TextView) view.findViewById(R.id.qid);
-            question = (TextView) view.findViewById(R.id.question);
+            qid = view.findViewById(R.id.qid);
+            question = view.findViewById(R.id.question);
             //year = (TextView) view.findViewById(R.id.year);
         }
     }

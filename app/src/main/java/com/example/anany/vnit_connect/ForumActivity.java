@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +19,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +37,7 @@ public class ForumActivity extends AppCompatActivity {
 
     private static final String TAG = "ForumActivity";
     private Ques_descAdapter mAdapter;
-    private ArrayList<Ques_desc> questionList;
+    private ArrayList<Ques_desc> questionList = new ArrayList<>();
     private RecyclerView recyclerView;
     private Question ques;
     private String uid, email, name;
@@ -51,12 +54,13 @@ public class ForumActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Forum");
 
         //Recycler view setup
-        /*recyclerView = findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         mAdapter = new Ques_descAdapter(questionList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);*/
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(mAdapter);
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,7 +70,7 @@ public class ForumActivity extends AppCompatActivity {
             uid = user.getUid();
         }
 
-        Query query = db.collection("user").whereEqualTo("email", email);
+        /*Query query = db.collection("user").whereEqualTo("email", email);
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
@@ -82,55 +86,85 @@ public class ForumActivity extends AppCompatActivity {
                     name = types.get(0).getUsername();
                 }
             }
-        });
+        });*/
 
         ArrayList<String> interests = new ArrayList<String>();
         interests.add("A");
         interests.add("B");
-        interests.add("C");
-        User user = new User(name, email, interests);
+        interests.add("D");
+        final User user = new User(name, email, interests);
 
-        // Add a new document with a generated ID
-        db.collection("user")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+        final Map<String, Object> mapuser = new HashMap<>();
+        mapuser.put("email", email);
+        mapuser.put("interests",interests);
 
-        //db.collection("users").document("user1").set(user);
-        //getListItems();
+        DocumentReference docRef = db.collection("user").document("iupAgvor1ptsvTz5ahrp");
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null && document.exists()) {
+                        User u = document.toObject(User.class);
+                        name = u.getUsername();
+                        user.setUsername(name);
+                        mapuser.put("username", name);
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        System.out.println(user.getUsername());
+
+                        // Add a new document with a generated ID
+                        db.collection("user").document("map_user1")
+                                .set(mapuser)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, user.getUsername());
+                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error writing document", e);
+                                    }
+                                });
+
+                    }
+                    else {
+                        Log.d(TAG, "No such document");
+                    }
+                }
+                else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+        getListItems();
 
     }
 
-    private void getListItems() {
+    public void getListItems() {
         db.collection("ques_desc").get()
-            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot documentSnapshots) {
-                    if (documentSnapshots.isEmpty()) {
-                        Log.d(TAG, "onSuccess: LIST EMPTY");
-                        return;
-                    } else {
-                        // Convert the whole Query Snapshot to a list
-                        // of objects directly! No need to fetch each
-                        // document.
-                        List<Ques_desc> types = documentSnapshots.toObjects(Ques_desc.class);
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                        if (documentSnapshots.isEmpty()) {
+                            Log.d(TAG, "onSuccess: LIST EMPTY");
+                            return;
+                        }
+                        else {
+                            // Convert the whole Query Snapshot to a list
+                            // of objects directly! No need to fetch each
+                            // document.
+                            List<Ques_desc> types = documentSnapshots.toObjects(Ques_desc.class);
 
-                        // Add all to your list
-                        questionList.addAll(types);
-                        Log.d(TAG, "onSuccess: " + questionList);
+                            // Add all to your list
+                            questionList.addAll(types);
+                            Log.d(TAG, "onSuccess: Yay! " + questionList);
+                        }
                     }
-                }
-            })
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure (@NonNull Exception e){

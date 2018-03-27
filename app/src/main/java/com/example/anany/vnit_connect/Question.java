@@ -5,12 +5,13 @@ package com.example.anany.vnit_connect;
  */
 
 public class Question {
-    private String question, user, qid;
+    private String question, user;
+    private int qid;
 
     public Question() {
     }
 
-    public Question(String qid, String question, String user) {
+    public Question(int qid, String question, String user) {
         this.question = question;
         this.qid = qid;
         this.user = user;
@@ -32,11 +33,11 @@ public class Question {
         this.user = user;
     }
 
-    public String getQid() {
+    public int getQid() {
         return qid;
     }
 
-    public void setQid(String qid) {
+    public void setQid(int qid) {
         this.qid = qid;
     }
 }

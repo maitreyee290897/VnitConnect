@@ -7,22 +7,23 @@ import java.util.ArrayList;
  */
 
 public class Ques_desc {
-    private String qid, question;
+    private String question;
+    private int qid;
     private ArrayList<String> tags = new ArrayList<>();
 
     public Ques_desc(){}
 
-    public Ques_desc(String qid, String question, ArrayList<String> tags){
+    public Ques_desc(int qid, String question, ArrayList<String> tags){
         this.qid = qid;
         this.question = question;
         this.tags = tags;
     }
 
-    public String getQid() {
+    public int getQid() {
         return qid;
     }
 
-    public void setQid(String qid) {
+    public void setQid(int qid) {
         this.qid = qid;
     }
 

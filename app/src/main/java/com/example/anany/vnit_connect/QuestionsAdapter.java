@@ -39,10 +39,10 @@ public class QuestionsAdapter extends RecyclerView.Adapter<QuestionsAdapter.MyVi
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
-            Question movie = questionsList.get(position);
-            holder.question.setText(movie.getQuestion());
-            holder.qid.setText(movie.getQid());
-            holder.user.setText(movie.getUser());
+            Question question = questionsList.get(position);
+            holder.question.setText(question.getQuestion());
+            holder.qid.setText(Integer.toString(question.getQid()));
+            holder.user.setText(question.getUser());
         }
 
         @Override
