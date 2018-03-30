@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.anany.vnit_connect.UserDashboard">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/PopupOverlay" />
+
+        <!--<android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            tools:targetApi="lollipop" />-->
+
+        <android.support.design.widget.TabLayout
+            android:background="@color/white"
+            app:tabSelectedTextColor="@color/colour1"
+            app:tabIndicatorColor="@color/colour3"
+            app:tabIndicatorHeight="3dp"
+            app:tabTextColor="@color/colour2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            android:id="@+id/tbl_pages"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_user_dashboard" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--ViewPager to show tab's fragments-->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_pages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v4.view.ViewPager>
+
+    </FrameLayout>
+
+</android.support.design.widget.LinearLayout>

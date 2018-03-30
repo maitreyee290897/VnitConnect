@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00bcd4</color>
+    <color name="colorPrimary">#ff6861</color>
     <color name="colorPrimaryDark">#0097a7</color>
-    <color name="colorAccent">#f2fe71</color>
+    <color name="colorAccent">#F5E2C8</color>
 
     <color name="bg_login">#26ae90</color>
     <color name="bg_register">#2e3237</color>
@@ -20,4 +20,20 @@
 
     <color name="year">#999999</color>
     <color name="title">#222222</color>
+
+    <color name="dark1">#2e4057</color>
+    <color name="dark2">#3c444f</color>
+    <color name="dark3">#2d3c57</color>
+    <color name="light1">#fceade</color>
+    <color name="light2">#f5e2c8</color>
+    <color name="colour1">#00c7b4</color>
+    <color name="colour2">#ff8a5b</color>
+    <color name="colour3">#5588aa</color>
+    <color name="colour4">#819d57</color>
+    <color name="colour5">#cd5630</color> <!--pink?-->
+    <color name="colour6">#dc564a</color>  <!--red?-->
+    <color name="colour7">#4ec5c1</color>
+
+
+
 </resources>

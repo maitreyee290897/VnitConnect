@@ -21,8 +21,16 @@
         <activity android:name=".SignupActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".ForumActivity"></activity>
+        <activity android:name=".ForumActivity" />
 
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name=".UserDashboard"
+            android:label="@string/title_activity_user_dashboard"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
