@@ -1,4 +1,4 @@
-package com.example.anany.vnit_connect;
+package com.example.anany.vnit_connect.models;
 
 /**
  * Created by shivali on 26/3/18.

@@ -1,9 +1,13 @@
 package com.example.anany.vnit_connect;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,37 +30,48 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import com.example.anany.vnit_connect.models.Question;
+import com.example.anany.vnit_connect.models.User;
+import com.example.anany.vnit_connect.adapters.Ques_descAdapter;
+import com.example.anany.vnit_connect.models.Ques_desc;
+
+
 public class ForumActivity extends AppCompatActivity {
 
-    private static final String TAG = "ForumActivity";
+    private AppCompatActivity activity = ForumActivity.this;
+    private RecyclerView recyclerViewQuestions;
+    private List<Ques_desc> questionsList;
     private Ques_descAdapter mAdapter;
-    private ArrayList<Ques_desc> questionList;
-    private RecyclerView recyclerView;
-    private Question ques;
+    private ListenerRegistration firestoreListener;
+
+    private static final String TAG = "ForumActivity";
+
+    private Ques_desc ques;
     private String uid, email, name;
     private FirebaseFirestore db;
     private FirebaseUser user;
-    //private ArrayList<User> mArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forum);
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+
+        //Init views
+        Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle("Forum");
 
+
         //Recycler view setup
-        /*recyclerView = findViewById(R.id.recycler_view);
-        mAdapter = new Ques_descAdapter(questionList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);*/
+        recyclerViewQuestions = findViewById(R.id.recyclerViewQuestions);
+        questionsList = new ArrayList<>();
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,78 +81,78 @@ public class ForumActivity extends AppCompatActivity {
             uid = user.getUid();
         }
 
-        Query query = db.collection("user").whereEqualTo("email", email);
-        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot documentSnapshots) {
-                if (documentSnapshots.isEmpty()) {
-                    Log.d(TAG, "onSuccess: LIST EMPTY");
-                    return;
-                }
-                else {
-                    // Convert the whole Query Snapshot to a list
-                    // of objects directly! No need to fetch each
-                    // document.
-                    List<User> types = documentSnapshots.toObjects(User.class);
-                    name = types.get(0).getUsername();
-                }
-            }
-        });
+        getAllQuestions();
 
-        ArrayList<String> interests = new ArrayList<String>();
-        interests.add("A");
-        interests.add("B");
-        interests.add("C");
-        User user = new User(name, email, interests);
-
-        // Add a new document with a generated ID
-        db.collection("user")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        firestoreListener = db.collection("ques_desc")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Listen failed!", e);
+                            return;
+                        }
+
+                        List<Ques_desc> quesList = new ArrayList<>();
+
+                        for (DocumentSnapshot doc : documentSnapshots) {
+                            Ques_desc q = doc.toObject(Ques_desc.class);
+                            quesList.add(q);
+                        }
+
+                        mAdapter = new Ques_descAdapter(quesList, getApplicationContext(), db);
+                        recyclerViewQuestions.setAdapter(mAdapter);
+                    }
+                });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        firestoreListener.remove();
+    }
+
+
+    private void getAllQuestions()
+    {
+
+        db.collection("ques_desc").get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Ques_desc> qList = new ArrayList<>();
+                        if(queryDocumentSnapshots.isEmpty()){
+                            Log.d(TAG,"onSuccess: LIST EMPTY");
+                        }
+                        else {
+                            List<Ques_desc> list = queryDocumentSnapshots.toObjects(Ques_desc.class);
+                            System.out.println(list.size());
+                            //System.out.println("ques fetched : " + questionsList.get(0).getQuestion());
+                            qList.addAll(list);
+                            System.out.println(qList.size());
+                            System.out.println("ques fetched : " + qList.get(0).getQuestion());
+                            Log.d(TAG,"onSuccess" + qList);
+                        }
+                        mAdapter = new Ques_descAdapter(qList, getApplicationContext(), db);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                        recyclerViewQuestions.setLayoutManager(mLayoutManager);
+                        recyclerViewQuestions.setItemAnimator(new DefaultItemAnimator());
+                        recyclerViewQuestions.setAdapter(mAdapter);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        Toast.makeText(getApplicationContext(),"Error getting data!",Toast.LENGTH_LONG).show();
                     }
                 });
-
-        //db.collection("users").document("user1").set(user);
-        //getListItems();
-
+        //System.out.println("ques fetched : " + qList.get(0).getQuestion());
+        System.out.println("Hey");
     }
 
-    private void getListItems() {
-        db.collection("ques_desc").get()
-            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot documentSnapshots) {
-                    if (documentSnapshots.isEmpty()) {
-                        Log.d(TAG, "onSuccess: LIST EMPTY");
-                        return;
-                    } else {
-                        // Convert the whole Query Snapshot to a list
-                        // of objects directly! No need to fetch each
-                        // document.
-                        List<Ques_desc> types = documentSnapshots.toObjects(Ques_desc.class);
 
-                        // Add all to your list
-                        questionList.addAll(types);
-                        Log.d(TAG, "onSuccess: " + questionList);
-                    }
-                }
-            })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure (@NonNull Exception e){
-                        Toast.makeText(getApplicationContext(), "Error getting data!!!", Toast.LENGTH_LONG).show();
-                    }
-                });
-    };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,7 +165,7 @@ public class ForumActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.profile:
-                Intent profilescreen=new Intent(this,MainActivity.class);
+                Intent profilescreen=new Intent(this,ProfileActivity.class);
                 profilescreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(profilescreen);
                 this.finish();
