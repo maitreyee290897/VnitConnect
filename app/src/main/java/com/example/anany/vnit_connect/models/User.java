@@ -1,4 +1,4 @@
-package com.example.anany.vnit_connect;
+package com.example.anany.vnit_connect.models;
 
 import java.util.ArrayList;
 

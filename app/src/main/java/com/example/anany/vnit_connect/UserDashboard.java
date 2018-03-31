@@ -1,6 +1,8 @@
 package com.example.anany.vnit_connect;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -19,8 +21,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.anany.vnit_connect.adapters.FragmentAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+
 public class UserDashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +36,6 @@ public class UserDashboard extends AppCompatActivity
         setContentView(R.layout.activity_user_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -47,13 +46,18 @@ public class UserDashboard extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Tab layout
+        //
+        // Tab layout
+        //
+        // Find the view pager that will allow the user to swipe between fragments
         ViewPager vp_pages= (ViewPager) findViewById(R.id.vp_pages);
-        PagerAdapter pagerAdapter=new FragmentAdapter(getSupportFragmentManager());
-        vp_pages.setAdapter(pagerAdapter);
+        PagerAdapter adapter = new FragmentAdapter(this, getSupportFragmentManager());
+        vp_pages.setAdapter(adapter);
 
-        TabLayout tbl_pages= (TabLayout) findViewById(R.id.tbl_pages);
-        tbl_pages.setupWithViewPager(vp_pages);
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tbl_pages);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(vp_pages);
 
     }
 
@@ -67,7 +71,7 @@ public class UserDashboard extends AppCompatActivity
         }
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.user_dashboard, menu);
@@ -87,7 +91,7 @@ public class UserDashboard extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -95,56 +99,37 @@ public class UserDashboard extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_chatbot) {
+            // Handle the chatbot action
+        }
+        else if (id == R.id.nav_forum) {
 
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        }
+        else if (id == R.id.nav_profile) {
+            startActivity(new Intent(UserDashboard.this, ProfileActivity.class));
+        }
+        else if (id == R.id.nav_logout) {
+            auth = FirebaseAuth.getInstance();
+            auth.signOut();
+            // this listener will be called when there is change in firebase user session
+            FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user == null) {
+                        // user auth state is changed - user is null
+                        // launch login activity
+                        startActivity(new Intent(UserDashboard.this, LoginActivity.class));
+                        finish();
+                    }
+                }
+            };
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    class FragmentAdapter extends FragmentPagerAdapter {
-
-        public FragmentAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    return new YourFragment1();
-                case 1:
-                    return new YourFragment2();
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position){
-                //Your tab titles
-                case 0:return "Chatbot";
-                case 1:return "Forum";
-                default:return null;
-            }
-        }
 
 }
 

@@ -18,4 +18,11 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="MyTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colour1</item>
+    </style>
+
 </resources>

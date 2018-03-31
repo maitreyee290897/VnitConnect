@@ -1,17 +1,19 @@
-package com.example.anany.vnit_connect;
+package com.example.anany.vnit_connect.models;
 
 /**
  * Created by shivali on 26/3/18.
  */
 
-public class Ans_details {
-    private String answer;
-    private int upvote, downvote, aid;
+public class Answers {
+    private String username, answer;
+    private int aid, qid, upvote, downvote;
 
-    public Ans_details(){}
+    public Answers(){}
 
-    public Ans_details(int aid, String answer, int upvote, int downvote){
+    public Answers(int aid, int qid, String username, String answer, int upvote, int downvote){
         this.aid = aid;
+        this.qid = qid;
+        this.username = username;
         this.answer = answer;
         this.upvote = upvote;
         this.downvote = downvote;
@@ -23,6 +25,22 @@ public class Ans_details {
 
     public void setAid(int aid) {
         this.aid = aid;
+    }
+
+    public int getQid() {
+        return qid;
+    }
+
+    public void setQid(int qid) {
+        this.qid = qid;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getAnswer() {
