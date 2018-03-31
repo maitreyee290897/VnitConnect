@@ -1,13 +1,9 @@
 package com.example.anany.vnit_connect;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,45 +11,41 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import com.example.anany.vnit_connect.models.Question;
-import com.example.anany.vnit_connect.models.User;
 import com.example.anany.vnit_connect.adapters.Ques_descAdapter;
-import com.example.anany.vnit_connect.models.Ques_desc;
 
 
 public class ForumActivity extends AppCompatActivity {
 
     private AppCompatActivity activity = ForumActivity.this;
     private RecyclerView recyclerViewQuestions;
-    private List<Ques_desc> questionsList;
+    private ProgressBar progressBar;
+    private List<Question> questionsList;
     private Ques_descAdapter mAdapter;
     private ListenerRegistration firestoreListener;
 
     private static final String TAG = "ForumActivity";
 
-    private Ques_desc ques;
+    private Question ques;
     private String uid, email, name;
     private FirebaseFirestore db;
     private FirebaseUser user;
@@ -67,6 +59,7 @@ public class ForumActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle("Forum");
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
         //Recycler view setup
@@ -81,9 +74,10 @@ public class ForumActivity extends AppCompatActivity {
             uid = user.getUid();
         }
 
+        progressBar.setVisibility(View.VISIBLE);
         getAllQuestions();
 
-        firestoreListener = db.collection("ques_desc")
+        firestoreListener = db.collection("questions")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -92,10 +86,10 @@ public class ForumActivity extends AppCompatActivity {
                             return;
                         }
 
-                        List<Ques_desc> quesList = new ArrayList<>();
+                        List<Question> quesList = new ArrayList<>();
 
                         for (DocumentSnapshot doc : documentSnapshots) {
-                            Ques_desc q = doc.toObject(Ques_desc.class);
+                            Question q = doc.toObject(Question.class);
                             quesList.add(q);
                         }
 
@@ -103,6 +97,7 @@ public class ForumActivity extends AppCompatActivity {
                         recyclerViewQuestions.setAdapter(mAdapter);
                     }
                 });
+        progressBar.setVisibility(View.GONE);
 
     }
 
@@ -117,16 +112,16 @@ public class ForumActivity extends AppCompatActivity {
     private void getAllQuestions()
     {
 
-        db.collection("ques_desc").get()
+        db.collection("questions").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<Ques_desc> qList = new ArrayList<>();
+                        List<Question> qList = new ArrayList<>();
                         if(queryDocumentSnapshots.isEmpty()){
                             Log.d(TAG,"onSuccess: LIST EMPTY");
                         }
                         else {
-                            List<Ques_desc> list = queryDocumentSnapshots.toObjects(Ques_desc.class);
+                            List<Question> list = queryDocumentSnapshots.toObjects(Question.class);
                             System.out.println(list.size());
                             //System.out.println("ques fetched : " + questionsList.get(0).getQuestion());
                             qList.addAll(list);
