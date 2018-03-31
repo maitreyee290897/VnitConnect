@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class UserDashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FirebaseAuth auth;
+    private ViewPager vp_pages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class UserDashboard extends AppCompatActivity
         setContentView(R.layout.activity_user_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        auth = FirebaseAuth.getInstance();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,7 +52,7 @@ public class UserDashboard extends AppCompatActivity
         // Tab layout
         //
         // Find the view pager that will allow the user to swipe between fragments
-        ViewPager vp_pages= (ViewPager) findViewById(R.id.vp_pages);
+        vp_pages= (ViewPager) findViewById(R.id.vp_pages);
         PagerAdapter adapter = new FragmentAdapter(this, getSupportFragmentManager());
         vp_pages.setAdapter(adapter);
 
@@ -100,16 +102,16 @@ public class UserDashboard extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_chatbot) {
-            // Handle the chatbot action
+            vp_pages.setCurrentItem(0);
         }
         else if (id == R.id.nav_forum) {
-
+            vp_pages.setCurrentItem(1);
         }
         else if (id == R.id.nav_profile) {
             startActivity(new Intent(UserDashboard.this, ProfileActivity.class));
         }
         else if (id == R.id.nav_logout) {
-            auth = FirebaseAuth.getInstance();
+
             auth.signOut();
             // this listener will be called when there is change in firebase user session
             FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {

@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/dark2"
+            android:background="@color/dark3"
             app:popupTheme="@style/PopupOverlay" />
 
         <android.support.design.widget.TabLayout
