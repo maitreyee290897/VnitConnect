@@ -13,10 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.anany.vnit_connect.adapters.Ques_descAdapter;
 import com.example.anany.vnit_connect.models.Ques_desc;
+import com.example.anany.vnit_connect.models.Question;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,6 +51,7 @@ public class ForumFragment extends Fragment {
     private String uid, email, name;
     private FirebaseFirestore db;
     private FirebaseUser user;
+    private ProgressBar progressBar;
 
     public ForumFragment() {
         // Required empty public constructor
@@ -63,6 +66,7 @@ public class ForumFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_forum, container, false);
         this.mView = view;
         context = getActivity();
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 
         //Recycler view setup
         recyclerViewQuestions = view.findViewById(R.id.recyclerViewQuestions);
@@ -75,11 +79,11 @@ public class ForumFragment extends Fragment {
             email = user.getEmail();
             uid = user.getUid();
         }
-        Log.d(TAG, "------------email is -" + email);
 
+        progressBar.setVisibility(View.VISIBLE);
         getAllQuestions();
 
-        firestoreListener = db.collection("ques_desc")
+        firestoreListener = db.collection("questions")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -88,10 +92,10 @@ public class ForumFragment extends Fragment {
                             return;
                         }
 
-                        List<Ques_desc> quesList = new ArrayList<>();
+                        List<Question> quesList = new ArrayList<>();
 
                         for (DocumentSnapshot doc : documentSnapshots) {
-                            Ques_desc q = doc.toObject(Ques_desc.class);
+                            Question q = doc.toObject(Question.class);
                             quesList.add(q);
                         }
 
@@ -99,6 +103,7 @@ public class ForumFragment extends Fragment {
                         recyclerViewQuestions.setAdapter(mAdapter);
                     }
                 });
+        progressBar.setVisibility(View.GONE);
 
         return view;
     }
@@ -110,28 +115,28 @@ public class ForumFragment extends Fragment {
         firestoreListener.remove();
     }
 
+    private void getAllQuestions() {
 
-    private void getAllQuestions()
-    {
-
-        db.collection("ques_desc").get()
+        db.collection("questions").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<Ques_desc> qList = new ArrayList<>();
+
+                        List<Question> qList = new ArrayList<>();
                         if(queryDocumentSnapshots.isEmpty()){
                             Log.d(TAG,"onSuccess: LIST EMPTY");
                         }
                         else {
-                            List<Ques_desc> list = queryDocumentSnapshots.toObjects(Ques_desc.class);
+                            List<Question> list = queryDocumentSnapshots.toObjects(Question.class);
+
                             System.out.println(list.size());
                             //System.out.println("ques fetched : " + questionsList.get(0).getQuestion());
                             qList.addAll(list);
                             System.out.println(qList.size());
                             System.out.println("ques fetched : " + qList.get(0).getQuestion());
-                            Log.d(TAG,"onSuccess" + qList);
+                            Log.d(TAG, "onSuccess" + qList);
                         }
-                        mAdapter = new Ques_descAdapter(qList,context, db);
+                        mAdapter = new Ques_descAdapter(qList, context, db);
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
                         recyclerViewQuestions.setLayoutManager(mLayoutManager);
                         recyclerViewQuestions.setItemAnimator(new DefaultItemAnimator());
@@ -141,7 +146,7 @@ public class ForumFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context,"Error getting data!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Error getting data!", Toast.LENGTH_LONG).show();
                     }
                 });
         //System.out.println("ques fetched : " + qList.get(0).getQuestion());

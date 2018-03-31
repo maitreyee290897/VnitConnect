@@ -5,19 +5,21 @@ package com.example.anany.vnit_connect.models;
  */
 
 public class Answers {
-    private String username, answer;
-    private int aid, qid, upvote, downvote;
 
-    public Answers(){}
+    private int aid,qid,upvotes,downvotes;
+    private String answer, user, timestamp;
 
-    public Answers(int aid, int qid, String username, String answer, int upvote, int downvote){
+    public Answers(int aid, int qid, int upvotes, int downvotes, String answer, String user, String timestamp) {
         this.aid = aid;
         this.qid = qid;
-        this.username = username;
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
         this.answer = answer;
-        this.upvote = upvote;
-        this.downvote = downvote;
+        this.user = user;
+        this.timestamp = timestamp;
     }
+
+    public Answers(){}
 
     public int getAid() {
         return aid;
@@ -35,12 +37,20 @@ public class Answers {
         this.qid = qid;
     }
 
-    public String getUsername() {
-        return username;
+    public int getUpvotes() {
+        return upvotes;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public int getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(int downvotes) {
+        this.downvotes = downvotes;
     }
 
     public String getAnswer() {
@@ -51,19 +61,20 @@ public class Answers {
         this.answer = answer;
     }
 
-    public int getUpvote() {
-        return upvote;
+    public String getUser() {
+        return user;
     }
 
-    public void setUpvote(int upvote) {
-        this.upvote = upvote;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public int getDownvote() {
-        return downvote;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setDownvote(int downvote) {
-        this.downvote = downvote;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
+
 }
