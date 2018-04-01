@@ -21,7 +21,7 @@
     <color name="year">#999999</color>
     <color name="title">#222222</color>
 
-    <color name="dark1">#2e4057</color>
+    <color name="dark1">#24292e</color>
     <color name="dark2">#3c444f</color>
     <color name="dark3">#475059</color>
     <color name="light1">#fceade</color>
@@ -33,6 +33,7 @@
     <color name="colour5">#cd5630</color> <!--pink?-->
     <color name="colour6">#dc564a</color>  <!--red?-->
     <color name="colour7">#4ec5c1</color>
+    <color name="colour8">#a12e38</color>
 
 
 
