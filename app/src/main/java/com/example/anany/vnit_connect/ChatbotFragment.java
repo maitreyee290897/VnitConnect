@@ -3,17 +3,32 @@ package com.example.anany.vnit_connect;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import static android.content.ContentValues.TAG;
+import ai.api.AIListener;
+import ai.api.android.AIConfiguration;
+import ai.api.android.AIService;
+import ai.api.model.AIError;
+import ai.api.model.AIResponse;
+import ai.api.model.Result;
+import com.google.gson.JsonElement;
+import java.util.Map;
 
-public class ChatbotFragment extends Fragment {
+public class ChatbotFragment extends Fragment implements AIListener,View.OnClickListener{
+
     protected View mView;
+    private Context context;
+    private Button listenButton;
+    private TextView resultTextView;
+    private AIService aiService;
 
     public ChatbotFragment() {
         // Required empty public constructor
@@ -27,52 +42,69 @@ public class ChatbotFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_chatbot, container, false);
         this.mView = view;
-        TextView textView = mView.findViewById(R.id.chatbot1);
-        textView.setText("Heya! Welcome to the chatbot!");
+        context = getActivity();
+        listenButton = (Button) view.findViewById(R.id.listenButton);
+        resultTextView = (TextView) view.findViewById(R.id.resultTextView);
+        listenButton.setOnClickListener(this);
+
+        final AIConfiguration config = new AIConfiguration("b2a471c1338945f9844fdf71ba08ab81",
+                AIConfiguration.SupportedLanguages.English,
+                AIConfiguration.RecognitionEngine.System);
+        aiService = AIService.getService(context, config);
+        aiService.setListener(this);
+
         return view;
     }
 
-    /*public void setText(String text) {
-        TextView view = (TextView) getView().findViewById(R.id.chatbot1);
-        view.setText(text);
-    }*/
+    @Override
+    public void onClick(View view) {
+        aiService.startListening();
+    }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    /*public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    public void onResult(final AIResponse response) {
+        Result result = response.getResult();
+
+        final String speech = result.getFulfillment().getSpeech();
+        Log.i(TAG, "Speech: " + speech);
+
+        // Get parameters
+        String parameterString = "";
+        if (result.getParameters() != null && !result.getParameters().isEmpty()) {
+            for (final Map.Entry<String, JsonElement> entry : result.getParameters().entrySet()) {
+                parameterString += "(" + entry.getKey() + ", " + entry.getValue() + ") ";
+            }
         }
+
+        // Show results in TextView.
+        //resultTextView.setText("Query:" + result.getResolvedQuery() +
+        //        "\nAction: " + result.getAction() +
+        //        "\nParameters: " + parameterString);
+        resultTextView.setText(speech);
+
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    public void onError(final AIError error) {
+        resultTextView.setText(error.toString());
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }*/
+    public void onAudioLevel(float level) {
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    /*public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }*/
+    }
+
+    @Override
+    public void onListeningStarted() {
+
+    }
+
+    @Override
+    public void onListeningCanceled() {
+
+    }
+
+    @Override
+    public void onListeningFinished() {
+
+    }
 }

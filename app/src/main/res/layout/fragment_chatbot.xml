@@ -4,12 +4,21 @@
     android:layout_height="match_parent"
     tools:context="com.example.anany.vnit_connect.ChatbotFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:id="@+id/listenButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Listen" />
+
     <TextView
-        android:id="@+id/chatbot1"
+        android:id="@+id/resultTextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="40dp"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="50dp" />
 
 </FrameLayout>
