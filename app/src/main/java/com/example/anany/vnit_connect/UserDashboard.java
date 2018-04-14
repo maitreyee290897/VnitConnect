@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 
 import com.example.anany.vnit_connect.adapters.FragmentAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,16 +29,59 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class UserDashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private FirebaseAuth auth;
+
     private ViewPager vp_pages;
+    private ProgressBar progressBar;
+    private FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dashboard);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(UserDashboard.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };
+
+
         auth = FirebaseAuth.getInstance();
+
+        //get current user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //set toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(user != null)
+        {
+            if(user.getDisplayName()!=null ) {
+                toolbar.setTitle("Hi " + user.getDisplayName().toString());
+            }
+            else
+            {
+                toolbar.setTitle("Hi " + user.getEmail().toString());
+            }
+        }
+        else
+        {
+            toolbar.setTitle("Hi ");
+        }
+        setSupportActionBar(toolbar);
+
+        /*progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -61,6 +105,26 @@ public class UserDashboard extends AppCompatActivity
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setupWithViewPager(vp_pages);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        auth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (authListener != null) {
+            auth.removeAuthStateListener(authListener);
+        }
     }
 
     @Override
@@ -121,6 +185,7 @@ public class UserDashboard extends AppCompatActivity
                     if (user == null) {
                         // user auth state is changed - user is null
                         // launch login activity
+                        System.out.println("Logged out!");
                         startActivity(new Intent(UserDashboard.this, LoginActivity.class));
                         finish();
                     }

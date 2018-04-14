@@ -1,5 +1,7 @@
 package com.example.anany.vnit_connect.models;
 
+import java.util.Date;
+
 /**
  * Created by shivali on 26/3/18.
  */
@@ -7,9 +9,10 @@ package com.example.anany.vnit_connect.models;
 public class Answers {
 
     private int aid,qid,upvotes,downvotes;
-    private String answer, user, timestamp;
+    private String answer, user;
+    Date timestamp = new Date();
 
-    public Answers(int aid, int qid, int upvotes, int downvotes, String answer, String user, String timestamp) {
+    public Answers(int aid, int qid, int upvotes, int downvotes, String answer, String user, Date timestamp) {
         this.aid = aid;
         this.qid = qid;
         this.upvotes = upvotes;
@@ -69,11 +72,11 @@ public class Answers {
         this.user = user;
     }
 
-    public String getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 

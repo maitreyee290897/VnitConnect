@@ -1,11 +1,9 @@
 package com.example.anany.vnit_connect;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.anany.vnit_connect.adapters.Ques_descAdapter;
-import com.example.anany.vnit_connect.models.Ques_desc;
 import com.example.anany.vnit_connect.models.Question;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,21 +30,17 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
 
 public class ForumFragment extends Fragment {
     protected View mView;
     private Context context;
 
     private RecyclerView recyclerViewQuestions;
-    private List<Ques_desc> questionsList;
     private Ques_descAdapter mAdapter;
     private ListenerRegistration firestoreListener;
 
     private static final String TAG = "ForumFragment";
 
-    private Ques_desc ques;
     private String uid, email, name;
     private FirebaseFirestore db;
     private FirebaseUser user;
@@ -70,7 +63,6 @@ public class ForumFragment extends Fragment {
 
         //Recycler view setup
         recyclerViewQuestions = view.findViewById(R.id.recyclerViewQuestions);
-        questionsList = new ArrayList<>();
 
         db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -103,7 +95,7 @@ public class ForumFragment extends Fragment {
                         recyclerViewQuestions.setAdapter(mAdapter);
                     }
                 });
-        progressBar.setVisibility(View.GONE);
+
 
         return view;
     }
@@ -141,6 +133,7 @@ public class ForumFragment extends Fragment {
                         recyclerViewQuestions.setLayoutManager(mLayoutManager);
                         recyclerViewQuestions.setItemAnimator(new DefaultItemAnimator());
                         recyclerViewQuestions.setAdapter(mAdapter);
+                        progressBar.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
