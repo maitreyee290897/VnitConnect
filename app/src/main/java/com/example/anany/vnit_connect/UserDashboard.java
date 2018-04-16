@@ -42,12 +42,7 @@ public class UserDashboard extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dashboard);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        //firebase connection
-        auth = FirebaseAuth.getInstance();
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -61,7 +56,53 @@ public class UserDashboard extends AppCompatActivity
             }
         };
 
+
+        auth = FirebaseAuth.getInstance();
+
+        //get current user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //set toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if(user != null)
+        {
+            if(user.getDisplayName()!=null ) {
+                toolbar.setTitle("Hi " + user.getDisplayName().toString());
+            }
+            else
+            {
+                toolbar.setTitle("Hi " + user.getEmail().toString());
+            }
+        }
+        else
+        {
+            toolbar.setTitle("Hi ");
+        }
+        setSupportActionBar(toolbar);
+
+        //firebase connection
+        /*auth = FirebaseAuth.getInstance();
+        final FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        authListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user1 = firebaseAuth.getCurrentUser();
+                if (user1 == null) {
+                    // user auth state is changed - user is null
+                    // launch login activity
+                    startActivity(new Intent(UserDashboard.this, LoginActivity.class));
+                    finish();
+                }
+            }
+        };*/
+
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+
+        /*progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -127,6 +168,12 @@ public class UserDashboard extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        //progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -171,7 +218,22 @@ public class UserDashboard extends AppCompatActivity
             startActivity(new Intent(UserDashboard.this, EditProfileActivity.class));
         }
         else if (id == R.id.nav_logout) {
-            signOut();
+
+            auth.signOut();
+            // this listener will be called when there is change in firebase user session
+            FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user == null) {
+                        // user auth state is changed - user is null
+                        // launch login activity
+                        System.out.println("Logged out!");
+                        startActivity(new Intent(UserDashboard.this, LoginActivity.class));
+                        finish();
+                    }
+                }
+            };
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

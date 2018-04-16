@@ -93,6 +93,8 @@ public class ChatbotFragment extends Fragment implements AIListener {
         final AIDataService aiDataService = new AIDataService(config);
         final AIRequest aiRequest = new AIRequest();
 
+        //----------------------------------------
+        //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},1);
         //-------------------------
 
         Query query = FirebaseDatabase.getInstance()
@@ -177,6 +179,7 @@ public class ChatbotFragment extends Fragment implements AIListener {
 
             }
         });
+
 
         final FirebaseRecyclerAdapter adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatHolder>(options) {
 

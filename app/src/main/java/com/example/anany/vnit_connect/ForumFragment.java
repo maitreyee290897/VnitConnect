@@ -95,7 +95,7 @@ public class ForumFragment extends Fragment {
                         recyclerViewQuestions.setAdapter(mAdapter);
                     }
                 });
-        progressBar.setVisibility(View.GONE);
+
 
         return view;
     }
@@ -133,6 +133,7 @@ public class ForumFragment extends Fragment {
                         recyclerViewQuestions.setLayoutManager(mLayoutManager);
                         recyclerViewQuestions.setItemAnimator(new DefaultItemAnimator());
                         recyclerViewQuestions.setAdapter(mAdapter);
+                        progressBar.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

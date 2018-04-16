@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="4dp"
+    android:layout_marginTop="5dp"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/viewProfileImage"
+                android:layout_marginLeft="0dp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textStyle="italic"
+                        android:text="Posted by"
+                        android:textColor="@android:color/darker_gray" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="user"
+                        android:textColor="#000000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="3dp">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textStyle="italic"
+                        android:text="Posted on"
+                        android:textColor="@android:color/darker_gray" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="date"
+                        android:textColor="@android:color/darker_gray" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="QID"
+                android:textColor="#000000" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textViewQid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="QID"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textViewAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Answer"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:textColor= "#000000"
+                android:layout_marginLeft="15dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/castUpvote"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:background="@android:color/white"
+                android:drawableTop="@drawable/ic_cast_upvote" />
+
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:id="@+id/upvote"
+                android:text="0"
+                android:textSize="20dp"
+                />
+
+            <Button
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:id="@+id/castDownvote"
+                android:background="@android:color/white"
+                android:drawableTop="@drawable/ic_cast_downvote"
+                 />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:id="@+id/downvote"
+                android:text="0"
+                android:textSize="20dp"
+                />
+
+        </LinearLayout>
+
+        <!--<LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true">
+            <Button
+                android:id="@+id/resolved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" android:text="Resolve complaint">
+            </Button>
+        </LinearLayout>-->
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
