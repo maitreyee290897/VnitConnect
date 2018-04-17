@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:background="#3a5b91">
 
@@ -26,12 +27,13 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="false"
             android:layout_marginTop="40dp"
-            android:fontFamily="@font/amatica_sc_bold"
             android:padding="10dp"
             android:text="Vnit-Connect"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="40sp" />
+            android:textSize="40sp"
+            />
+        <!--app:fontFamily="@font/amatica_sc_bold"-->
 
 
         <LinearLayout
