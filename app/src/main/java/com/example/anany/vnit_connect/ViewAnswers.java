@@ -80,7 +80,7 @@ public class ViewAnswers extends AppCompatActivity {
 
         getAllAnswers(quesId);
 
-        firestoreListener = db.collection("answers")
+        firestoreListener = db.collection("answers").whereEqualTo("qid",quesId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -93,6 +93,7 @@ public class ViewAnswers extends AppCompatActivity {
 
                         for (DocumentSnapshot doc : documentSnapshots) {
                             Answers a = doc.toObject(Answers.class);
+                            a.setAid(doc.getId());
                             answersList.add(a);
                         }
 
@@ -123,7 +124,14 @@ public class ViewAnswers extends AppCompatActivity {
                             Log.d(TAG,"onSuccess: LIST EMPTY");
                         }
                         else {
-                            List<Answers> list = queryDocumentSnapshots.toObjects(Answers.class);
+
+                            List<Answers> list = new ArrayList<>();
+                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                Answers ans = doc.toObject(Answers.class);
+                                ans.setAid(doc.getId());
+                                list.add(ans);
+                            }
+
                             System.out.println(list.size());
                             //System.out.println("ques fetched : " + questionsList.get(0).getQuestion());
                             aList.addAll(list);

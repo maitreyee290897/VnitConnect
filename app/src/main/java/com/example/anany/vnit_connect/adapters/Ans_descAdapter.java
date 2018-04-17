@@ -2,22 +2,40 @@ package com.example.anany.vnit_connect.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.anany.vnit_connect.R;
 import com.example.anany.vnit_connect.models.Answers;
 import com.example.anany.vnit_connect.models.Question;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static ai.api.android.AIDataService.TAG;
 
 /**
  * Created by anany on 1/4/18.
@@ -47,7 +65,7 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
 
         TextDrawable drawable;
 
-        Answers answer = answersList.get(position);
+        final Answers answer = answersList.get(position);
         //holder.qid.setText(String.valueOf(question.getQid()));
         ColorGenerator generator = ColorGenerator.MATERIAL;
         int color1 = generator.getRandomColor();
@@ -66,6 +84,70 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
         holder.user.setText(answer.getUser());
         holder.uvote.setText(String.valueOf(answer.getUpvotes()));
         holder.dvote.setText(String.valueOf(answer.getDownvotes()));
+        holder.btn_upvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db = FirebaseFirestore.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                db.collection("votes").whereEqualTo("aid",answer.getAid())
+                        .whereEqualTo("user",user.getDisplayName())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                if(queryDocumentSnapshots.isEmpty())
+                                {
+                                    castUpvote(position);
+                                    Drawable mDrawable = context.getResources().getDrawable(R.drawable.ic_upvote);
+                                    mDrawable.setColorFilter(new
+                                            PorterDuffColorFilter(0xffff00,PorterDuff.Mode.SRC_IN));
+                                }
+                                else
+                                {
+                                    Toast.makeText(context, "you have already voted!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "some error occured!");
+                            }
+                        });
+
+            }
+        });
+        holder.btn_downvote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db = FirebaseFirestore.getInstance();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                db.collection("votes").whereEqualTo("aid",answer.getAid())
+                        .whereEqualTo("user",user.getDisplayName())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                if(queryDocumentSnapshots.isEmpty())
+                                {
+                                    castDownvote(position);
+                                    //holder.dvote.setText(String.valueOf(answer.getDownvotes()+1));
+                                }
+                                else
+                                {
+                                    Toast.makeText(context, "you have already voted!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "some error occured!");
+                            }
+                        });
+
+            }
+        });
     }
 
     @Override
@@ -82,6 +164,8 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
         public AppCompatTextView uvote;
         public AppCompatTextView dvote;
         public ImageView img;
+        public Button btn_upvote;
+        public Button btn_downvote;
 
 
         public MyViewHolder(View view) {
@@ -93,14 +177,75 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
             date = (AppCompatTextView) view.findViewById(R.id.textViewDate);
             ans = (AppCompatTextView) view.findViewById(R.id.textViewAnswer);
             img = (ImageView) view.findViewById(R.id.viewProfileImage);
+            btn_upvote = (Button) view.findViewById(R.id.castUpvote);
+            btn_downvote = (Button) view.findViewById(R.id.castDownvote);
 
         }
     }
 
-    private void castUpvote(String ansId, final int position)
+    private void castUpvote(final int position)
     {
         Answers ans = answersList.get(position);
-        db.collection("answers").whereEqualTo("aid",ansId);
-                //.
+        final String ansId = ans.getAid();
+        db = FirebaseFirestore.getInstance();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        int uvote = ans.getUpvotes();
+
+        db.collection("answers").document(ansId)
+                .update("upvotes",uvote+1)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("aid", ansId);
+                        data.put("user", user.getDisplayName());
+                        data.put("vote",1);
+                        db.collection("votes")
+                                .add(data);
+                        Log.d(TAG, "upvoted");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "upvote failed", e);
+                    }
+                });
+    }
+
+    private void castDownvote(final int position)
+    {
+        Answers ans = answersList.get(position);
+        final String ansId = ans.getAid();
+        int dvote = ans.getDownvotes();
+        db = FirebaseFirestore.getInstance();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        db.collection("answers").document(ansId)
+                .update("downvotes",dvote+1)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("aid", ansId);
+                        data.put("user", user.getDisplayName());
+                        data.put("vote",-1);
+                        db.collection("votes")
+                                .add(data);
+                        Log.d(TAG, "downvoted");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "downvote failed", e);
+                    }
+                });
     }
 }

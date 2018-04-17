@@ -11,16 +11,18 @@ import java.util.List;
 public class Question {
 
 
+    private static int c = 2;
+
     private int qid;
     private String question, user;
     private List<String> tags = new ArrayList<>();
     private Date timestamp = new Date();
 
     public Question() {
+        qid = ++c;
     }
 
-    public Question(int qid, String question, String user, Date ts, List<String> tags) {
-        this.qid = qid;
+    public Question(String question, String user, Date ts, List<String> tags) {
         this.question = question;
         this.user = user;
         this.timestamp = ts;

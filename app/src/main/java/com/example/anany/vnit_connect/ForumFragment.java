@@ -1,8 +1,10 @@
 package com.example.anany.vnit_connect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,6 +38,7 @@ public class ForumFragment extends Fragment {
     private Context context;
 
     private RecyclerView recyclerViewQuestions;
+    private FloatingActionButton addQues;
     private Ques_descAdapter mAdapter;
     private ListenerRegistration firestoreListener;
 
@@ -60,6 +63,8 @@ public class ForumFragment extends Fragment {
         this.mView = view;
         context = getActivity();
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        addQues = (FloatingActionButton) view.findViewById(R.id.button_addq);
+
 
         //Recycler view setup
         recyclerViewQuestions = view.findViewById(R.id.recyclerViewQuestions);
@@ -96,6 +101,13 @@ public class ForumFragment extends Fragment {
                     }
                 });
 
+        addQues.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AskQuestion.class);
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
