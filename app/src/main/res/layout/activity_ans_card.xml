@@ -3,9 +3,9 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/tools"
     card_view:cardCornerRadius="4dp"
-    android:layout_marginTop="5dp"
-    >
+    android:layout_marginTop="5dp">
 
 
     <LinearLayout
@@ -124,39 +124,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp">
+            >
 
             <Button
                 android:id="@+id/castUpvote"
                 android:layout_width="35dp"
-                android:layout_height="40dp"
+                android:layout_height="38dp"
                 android:background="@android:color/white"
-                android:drawableTop="@drawable/ic_cast_upvote" />
+                android:drawableTop="@drawable/ic_upvote" />
 
 
             <android.support.v7.widget.AppCompatTextView
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"
                 android:id="@+id/upvote"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:text="0"
-                android:textSize="20dp"
-                />
+                android:textSize="15dp" />
 
             <Button
-                android:layout_width="35dp"
-                android:layout_height="40dp"
                 android:id="@+id/castDownvote"
+                android:layout_width="35dp"
+                android:layout_height="38dp"
                 android:background="@android:color/white"
-                android:drawableTop="@drawable/ic_cast_downvote"
-                 />
+                android:drawableTop="@drawable/ic_downvote" />
 
             <android.support.v7.widget.AppCompatTextView
-                android:layout_height="match_parent"
-                android:layout_width="wrap_content"
                 android:id="@+id/downvote"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
                 android:text="0"
-                android:textSize="20dp"
-                />
+                android:textSize="15dp" />
 
         </LinearLayout>
 

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class ViewAnswers extends AppCompatActivity {
 
         getAllAnswers(quesId);
 
-        firestoreListener = db.collection("answers")
+        firestoreListener = db.collection("answers").whereEqualTo("qid",quesId).orderBy("upvotes", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -93,12 +94,13 @@ public class ViewAnswers extends AppCompatActivity {
 
                         for (DocumentSnapshot doc : documentSnapshots) {
                             Answers a = doc.toObject(Answers.class);
+                            a.setAid(doc.getId());
                             answersList.add(a);
                         }
 
                         mAdapter = new Ans_descAdapter(answersList, getApplicationContext(), db);
                         recyclerViewAnswers.setAdapter(mAdapter);
-                        progressBar.setVisibility(View.GONE);
+
                     }
                 });
 
@@ -114,7 +116,7 @@ public class ViewAnswers extends AppCompatActivity {
     private void getAllAnswers(int quesId)
     {
 
-        db.collection("answers").whereEqualTo("qid",quesId).get()
+        db.collection("answers").whereEqualTo("qid",quesId).orderBy("upvotes", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -123,7 +125,14 @@ public class ViewAnswers extends AppCompatActivity {
                             Log.d(TAG,"onSuccess: LIST EMPTY");
                         }
                         else {
-                            List<Answers> list = queryDocumentSnapshots.toObjects(Answers.class);
+
+                            List<Answers> list = new ArrayList<>();
+                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                Answers ans = doc.toObject(Answers.class);
+                                ans.setAid(doc.getId());
+                                list.add(ans);
+                            }
+
                             System.out.println(list.size());
                             //System.out.println("ques fetched : " + questionsList.get(0).getQuestion());
                             aList.addAll(list);

@@ -36,10 +36,13 @@ import ai.api.model.Result;
 import com.example.anany.vnit_connect.models.ChatHolder;
 import com.example.anany.vnit_connect.models.ChatMessage;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class ChatbotFragment extends Fragment implements AIListener {
@@ -61,7 +64,10 @@ public class ChatbotFragment extends Fragment implements AIListener {
     private FirebaseRecyclerAdapter welcomeAdapter;
     private Query welcomeQuery;
     private Query query;
-
+    private String uid, email, name;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
+    private ChatMessage welcomeMsg;
 
 
     public ChatbotFragment() {
@@ -85,22 +91,26 @@ public class ChatbotFragment extends Fragment implements AIListener {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        //initViews();
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        if (user != null) {
+            email = user.getEmail();
+            uid = user.getUid();
+            System.out.println(uid);
+            name = user.getDisplayName();
+
+        }
+
         configureAI();
-        //initListeners();
 
         //Get firebase reference
         ref = FirebaseDatabase.getInstance().getReference();
         ref.keepSynced(true);
 
-        /*welcomeQuery = ref.child("welcome").limitToFirst(1);
-        FirebaseRecyclerOptions<ChatMessage> welcomeOptions =
-                new FirebaseRecyclerOptions.Builder<ChatMessage>()
-                        .setQuery(welcomeQuery, ChatMessage.class)
-                        .build();
-        */
 
-        query = ref.child("chat").limitToLast(50);
+        query = ref.child(uid).limitToLast(50);
         FirebaseRecyclerOptions<ChatMessage> options =
                 new FirebaseRecyclerOptions.Builder<ChatMessage>()
                         .setQuery(query, ChatMessage.class)
@@ -112,14 +122,11 @@ public class ChatbotFragment extends Fragment implements AIListener {
             @Override
             public void onClick(View view) {
 
-                Log.e(TAG, "!!!addBtn clicked!!!");
                 String message = editText.getText().toString().trim();
                 if (!message.equals("")) {
 
                     ChatMessage chatMessage = new ChatMessage(message, "user");
-                    ref.child("chat").push().setValue(chatMessage);
-
-                    Log.e(TAG, "!!!addBtn - notify data set changed!!! - "+message);
+                    ref.child(uid).push().setValue(chatMessage);
                     adapter.notifyDataSetChanged();
 
                     aiRequest.setQuery(message);
@@ -142,9 +149,7 @@ public class ChatbotFragment extends Fragment implements AIListener {
                                 Result result = response.getResult();
                                 String reply = result.getFulfillment().getSpeech();
                                 ChatMessage chatMessage = new ChatMessage(reply, "bot");
-                                ref.child("chat").push().setValue(chatMessage);
-
-                                Log.e(TAG, "!!!addBtn - notify data set changed!!! - "+reply);
+                                ref.child(uid).push().setValue(chatMessage);
                                 adapter.notifyDataSetChanged();
 
                             }
@@ -211,7 +216,6 @@ public class ChatbotFragment extends Fragment implements AIListener {
 
             @Override
             protected void onBindViewHolder(ChatHolder viewHolder, int position, ChatMessage model) {
-                Log.e(TAG, "!!!Inside adapter onBind!!!");
 
                 // Bind the Chat object to the ChatHolder
                 if (model.getMsgUser().equals("user")) {
@@ -220,9 +224,6 @@ public class ChatbotFragment extends Fragment implements AIListener {
                     viewHolder.rightText.setVisibility(View.VISIBLE);
                     viewHolder.leftText.setVisibility(View.GONE);
 
-                    Log.e(TAG, "!!!onBind - notifyItemInserted  user at - "+position);
-                    //adapter.notifyItemInserted(position);
-
                 }
                 else {
 
@@ -230,8 +231,6 @@ public class ChatbotFragment extends Fragment implements AIListener {
                     viewHolder.rightText.setVisibility(View.GONE);
                     viewHolder.leftText.setVisibility(View.VISIBLE);
 
-                    Log.e(TAG, "!!!onBind - notifyItemInserted bot at - "+position);
-                    //adapter.notifyItemInserted(position);
                 }
 
             }
@@ -269,19 +268,15 @@ public class ChatbotFragment extends Fragment implements AIListener {
         recyclerView.setAdapter(adapter);
 
         adapter.startListening();
+
+        welcomeMsg = new ChatMessage("Hey! How may I help you?","bot");
+        ref.child(uid).push().setValue(welcomeMsg);
+
         adapter.notifyDataSetChanged();
         return view;
 
     }
 
-
-    /*
-    //Initialize the views
-    */
-    private void initViews() {
-
-
-    }
 
     /*
     //Setup our Dialogflow agent
@@ -296,14 +291,6 @@ public class ChatbotFragment extends Fragment implements AIListener {
 
         aiDataService = new AIDataService(config);
         aiRequest = new AIRequest();
-
-    }
-
-    /*
-    //Initialize the listeners
-    */
-    private void initListeners() {
-
 
     }
 
@@ -335,23 +322,23 @@ public class ChatbotFragment extends Fragment implements AIListener {
     @Override
     public void onResult(ai.api.model.AIResponse response) {
 
-        /*Result result = response.getResult();
+        Result result = response.getResult();
 
         String message = result.getResolvedQuery();
         ChatMessage chatMessage0 = new ChatMessage(message, "user");
-        ref.child("chat").push().setValue(chatMessage0);
+        ref.child(uid).push().setValue(chatMessage0);
 
 
         String reply = result.getFulfillment().getSpeech();
         ChatMessage chatMessage = new ChatMessage(reply, "bot");
-        ref.child("chat").push().setValue(chatMessage);*/
+        ref.child(uid).push().setValue(chatMessage);
 
     }
 
 
     @Override
     public void onError(final AIError error) {
-        resultTextView.setText(error.toString());
+        //resultTextView.setText(error.toString());
     }
 
     @Override

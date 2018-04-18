@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +16,21 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.anany.vnit_connect.adapters.Ans_descAdapter;
+import com.example.anany.vnit_connect.models.Answers;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -63,7 +74,6 @@ public class ProfileActivity extends AppCompatActivity {
         btnSendResetEmail = (Button) findViewById(R.id.sending_pass_reset_button);
         btnRemoveUser = (Button) findViewById(R.id.remove_user_button);
         changePassword = (Button) findViewById(R.id.changePass);
-        sendEmail = (Button) findViewById(R.id.send);
         remove = (Button) findViewById(R.id.remove);
         signOut = (Button) findViewById(R.id.sign_out);
 
@@ -73,7 +83,6 @@ public class ProfileActivity extends AppCompatActivity {
         password.setVisibility(View.GONE);
         newPassword.setVisibility(View.GONE);
         changePassword.setVisibility(View.GONE);
-        sendEmail.setVisibility(View.GONE);
         remove.setVisibility(View.GONE);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -88,7 +97,6 @@ public class ProfileActivity extends AppCompatActivity {
                 password.setVisibility(View.GONE);
                 newPassword.setVisibility(View.VISIBLE);
                 changePassword.setVisibility(View.VISIBLE);
-                sendEmail.setVisibility(View.GONE);
                 remove.setVisibility(View.GONE);
             }
         });
@@ -130,34 +138,12 @@ public class ProfileActivity extends AppCompatActivity {
                 password.setVisibility(View.GONE);
                 newPassword.setVisibility(View.GONE);
                 changePassword.setVisibility(View.GONE);
-                sendEmail.setVisibility(View.VISIBLE);
                 remove.setVisibility(View.GONE);
-            }
-        });
-
-        sendEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = user.getEmail();
-
-                progressBar.setVisibility(View.VISIBLE);
-
-                    auth.sendPasswordResetEmail(email)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ProfileActivity.this, "Reset password email is sent!", Toast.LENGTH_SHORT).show();
-                                        progressBar.setVisibility(View.GONE);
-                                    } else {
-                                        Toast.makeText(ProfileActivity.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
+                startActivity(new Intent(ProfileActivity.this, ResetPasswordActivity.class));
 
             }
         });
+
 
         btnRemoveUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +165,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+
                 }
             }
         });

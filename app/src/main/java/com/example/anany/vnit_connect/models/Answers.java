@@ -8,11 +8,11 @@ import java.util.Date;
 
 public class Answers {
 
-    private int aid,qid,upvotes,downvotes;
-    private String answer, user;
+    private int qid,upvotes,downvotes;
+    private String answer, user,aid;
     Date timestamp = new Date();
 
-    public Answers(int aid, int qid, int upvotes, int downvotes, String answer, String user, Date timestamp) {
+    public Answers(String aid, int qid, int upvotes, int downvotes, String answer, String user, Date timestamp) {
         this.aid = aid;
         this.qid = qid;
         this.upvotes = upvotes;
@@ -24,11 +24,11 @@ public class Answers {
 
     public Answers(){}
 
-    public int getAid() {
+    public String getAid() {
         return aid;
     }
 
-    public void setAid(int aid) {
+    public void setAid(String aid) {
         this.aid = aid;
     }
 

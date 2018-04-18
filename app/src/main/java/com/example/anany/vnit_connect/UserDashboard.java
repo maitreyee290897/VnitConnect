@@ -22,6 +22,8 @@ import android.content.pm.PackageManager;
 import com.example.anany.vnit_connect.adapters.FragmentAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class UserDashboard extends AppCompatActivity
@@ -31,6 +33,8 @@ public class UserDashboard extends AppCompatActivity
     private ProgressBar progressBar;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+    private DatabaseReference ref;
+    private FirebaseUser user;
 
     // Requesting permission to RECORD_AUDIO
     private boolean permissionToRecordAccepted = false;
@@ -60,7 +64,10 @@ public class UserDashboard extends AppCompatActivity
         auth = FirebaseAuth.getInstance();
 
         //get current user
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        //Get firebase reference
+        ref = FirebaseDatabase.getInstance().getReference();
 
         //set toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -99,7 +106,6 @@ public class UserDashboard extends AppCompatActivity
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
         /*progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }*/
@@ -185,6 +191,9 @@ public class UserDashboard extends AppCompatActivity
 
     //sign out method
     public void signOut() {
+
+        //Delete chats
+        ref.child(user.getUid()).setValue(null);
         auth.signOut();
         // this listener will be called when there is change in firebase user session
         FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
@@ -218,22 +227,7 @@ public class UserDashboard extends AppCompatActivity
             startActivity(new Intent(UserDashboard.this, EditProfileActivity.class));
         }
         else if (id == R.id.nav_logout) {
-
-            auth.signOut();
-            // this listener will be called when there is change in firebase user session
-            FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user == null) {
-                        // user auth state is changed - user is null
-                        // launch login activity
-                        System.out.println("Logged out!");
-                        startActivity(new Intent(UserDashboard.this, LoginActivity.class));
-                        finish();
-                    }
-                }
-            };
+            signOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -242,5 +236,3 @@ public class UserDashboard extends AppCompatActivity
     }
 
 }
-
-

@@ -15,7 +15,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="#691A99"
+                android:background="#09151A"
                 app:titleTextColor="@android:color/white"
                 app:layout_scrollFlags="scroll|enterAlways"
                 />
@@ -56,7 +56,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="20dp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewAnswers"
