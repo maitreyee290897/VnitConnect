@@ -100,7 +100,7 @@ public class ChatbotFragment extends Fragment implements AIListener {
                         .build();
         */
 
-        query = ref.child("chat").limitToFirst(50);
+        query = ref.child("chat").limitToLast(50);
         FirebaseRecyclerOptions<ChatMessage> options =
                 new FirebaseRecyclerOptions.Builder<ChatMessage>()
                         .setQuery(query, ChatMessage.class)
@@ -118,6 +118,8 @@ public class ChatbotFragment extends Fragment implements AIListener {
 
                     ChatMessage chatMessage = new ChatMessage(message, "user");
                     ref.child("chat").push().setValue(chatMessage);
+
+                    Log.e(TAG, "!!!addBtn - notify data set changed!!! - "+message);
                     adapter.notifyDataSetChanged();
 
                     aiRequest.setQuery(message);
@@ -141,6 +143,10 @@ public class ChatbotFragment extends Fragment implements AIListener {
                                 String reply = result.getFulfillment().getSpeech();
                                 ChatMessage chatMessage = new ChatMessage(reply, "bot");
                                 ref.child("chat").push().setValue(chatMessage);
+
+                                Log.e(TAG, "!!!addBtn - notify data set changed!!! - "+reply);
+                                adapter.notifyDataSetChanged();
+
                             }
                         }
                     }.execute(aiRequest);
@@ -214,46 +220,56 @@ public class ChatbotFragment extends Fragment implements AIListener {
                     viewHolder.rightText.setVisibility(View.VISIBLE);
                     viewHolder.leftText.setVisibility(View.GONE);
 
+                    Log.e(TAG, "!!!onBind - notifyItemInserted  user at - "+position);
+                    //adapter.notifyItemInserted(position);
+
                 }
                 else {
 
                     viewHolder.leftText.setText(model.getMsgText());
                     viewHolder.rightText.setVisibility(View.GONE);
                     viewHolder.leftText.setVisibility(View.VISIBLE);
+
+                    Log.e(TAG, "!!!onBind - notifyItemInserted bot at - "+position);
+                    //adapter.notifyItemInserted(position);
                 }
 
             }
         };
 
 
-        /*adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int msgCount = adapter.getItemCount();
-                int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (msgCount - 1) &&
-                                lastVisiblePosition == (positionStart - 1))) {
-                    recyclerView.scrollToPosition(positionStart);
-                }
-
-            }
-        });*/
-
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                Log.d(TAG, "onItemRangeInserted: fired");
-                recyclerView.smoothScrollToPosition(adapter.getItemCount());
+
+                int msgCount = adapter.getItemCount();
+                int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (msgCount - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
+                    recyclerView.smoothScrollToPosition(positionStart);
+
+                }
+                adapter.notifyDataSetChanged();
+
             }
         });
+
+        /*adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                Log.d(TAG, "onItemRangeInserted: fired -itemcount " +adapter.getItemCount());
+                recyclerView.smoothScrollToPosition(adapter.getItemCount());
+            }
+        });*/
 
         recyclerView.setAdapter(adapter);
 
         adapter.startListening();
-        //adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         return view;
 
     }
@@ -319,7 +335,7 @@ public class ChatbotFragment extends Fragment implements AIListener {
     @Override
     public void onResult(ai.api.model.AIResponse response) {
 
-        Result result = response.getResult();
+        /*Result result = response.getResult();
 
         String message = result.getResolvedQuery();
         ChatMessage chatMessage0 = new ChatMessage(message, "user");
@@ -328,7 +344,7 @@ public class ChatbotFragment extends Fragment implements AIListener {
 
         String reply = result.getFulfillment().getSpeech();
         ChatMessage chatMessage = new ChatMessage(reply, "bot");
-        ref.child("chat").push().setValue(chatMessage);
+        ref.child("chat").push().setValue(chatMessage);*/
 
     }
 

@@ -64,6 +64,7 @@
                     android:textColor="@color/white"
                     android:textColorHint="@color/white"
                     android:textColorLink="@color/white"
+                    android:textCursorDrawable="@null"
                     android:textSize="16sp" />
             </android.support.design.widget.TextInputLayout>
 
