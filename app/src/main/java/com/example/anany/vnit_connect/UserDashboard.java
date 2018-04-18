@@ -16,9 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
-
 import android.content.pm.PackageManager;
-
 
 
 import com.example.anany.vnit_connect.adapters.FragmentAdapter;
@@ -34,13 +32,11 @@ public class UserDashboard extends AppCompatActivity
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
 
-
     // Requesting permission to RECORD_AUDIO
     private boolean permissionToRecordAccepted = false;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,25 +80,28 @@ public class UserDashboard extends AppCompatActivity
         }
         setSupportActionBar(toolbar);
 
-
         //firebase connection
-        auth = FirebaseAuth.getInstance();
-        //final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        /*auth = FirebaseAuth.getInstance();
+        final FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
+                FirebaseUser user1 = firebaseAuth.getCurrentUser();
+                if (user1 == null) {
                     // user auth state is changed - user is null
                     // launch login activity
                     startActivity(new Intent(UserDashboard.this, LoginActivity.class));
                     finish();
                 }
             }
-        };
+        };*/
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
 
+        /*progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -154,12 +153,6 @@ public class UserDashboard extends AppCompatActivity
     }*/
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        //progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         auth.addAuthStateListener(authListener);
@@ -171,6 +164,12 @@ public class UserDashboard extends AppCompatActivity
         if (authListener != null) {
             auth.removeAuthStateListener(authListener);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -242,5 +241,3 @@ public class UserDashboard extends AppCompatActivity
     }
 
 }
-
-

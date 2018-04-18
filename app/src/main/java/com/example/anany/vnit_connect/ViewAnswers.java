@@ -24,6 +24,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class ViewAnswers extends AppCompatActivity {
 
         getAllAnswers(quesId);
 
-        firestoreListener = db.collection("answers").whereEqualTo("qid",quesId)
+        firestoreListener = db.collection("answers").whereEqualTo("qid",quesId).orderBy("upvotes", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -99,7 +100,7 @@ public class ViewAnswers extends AppCompatActivity {
 
                         mAdapter = new Ans_descAdapter(answersList, getApplicationContext(), db);
                         recyclerViewAnswers.setAdapter(mAdapter);
-                        progressBar.setVisibility(View.GONE);
+
                     }
                 });
 
@@ -115,7 +116,7 @@ public class ViewAnswers extends AppCompatActivity {
     private void getAllAnswers(int quesId)
     {
 
-        db.collection("answers").whereEqualTo("qid",quesId).get()
+        db.collection("answers").whereEqualTo("qid",quesId).orderBy("upvotes", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

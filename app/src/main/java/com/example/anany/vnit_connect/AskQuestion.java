@@ -79,6 +79,13 @@ public class AskQuestion extends AppCompatActivity {
         btnSearch.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
+                 //ques = inputQues.getText().toString().trim();
+                 ques = "Where is VNIT?";
+                 if (TextUtils.isEmpty(ques)) {
+                     Toast.makeText(getApplicationContext(), "Enter question!", Toast.LENGTH_SHORT).show();
+                     return;
+                 }
+                 System.out.println("1:"+ques);
                  sendPostRequest(ques);
              }
          });
@@ -87,7 +94,7 @@ public class AskQuestion extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ques = inputQues.getText().toString().trim();
-                System.out.println(ques);
+                System.out.println("Hi");
                 if (TextUtils.isEmpty(ques)) {
                     Toast.makeText(getApplicationContext(), "Enter question!", Toast.LENGTH_SHORT).show();
                     return;
@@ -104,6 +111,7 @@ public class AskQuestion extends AppCompatActivity {
 
     private void sendPostRequest(String ques) {
 
+
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
 
             protected void onPreExecute() {
@@ -119,7 +127,7 @@ public class AskQuestion extends AppCompatActivity {
 
 
                 try {
-                    String url = "https://jce-blb.herokuapp.com/test";
+                    String url = "https://apiai-vnitconnect-webhook.herokuapp.com/questions";
                     URL obj = new URL(url);
                     HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 
@@ -128,9 +136,12 @@ public class AskQuestion extends AppCompatActivity {
                     con.setRequestProperty("Accept", "application/json");
                     con.setRequestProperty("Content-type", "application/json");
 
+                    System.out.println(paramQues);
 
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("question", paramQues);
+
+                    System.out.print(jsonObject.toString());
 
                     // Send post request
                     con.setDoOutput(true);
@@ -150,6 +161,7 @@ public class AskQuestion extends AppCompatActivity {
 
                     while ((inputLine = in.readLine()) != null) {
                         response.append(inputLine);
+                        System.out.println("reading line");
                     }
                     in.close();
 
@@ -166,6 +178,7 @@ public class AskQuestion extends AppCompatActivity {
         }
 
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
+        System.out.println("2:"+ques);
         sendPostReqAsyncTask.execute(ques);
     }
 

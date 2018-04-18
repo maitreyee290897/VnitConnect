@@ -98,9 +98,7 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
                                 if(queryDocumentSnapshots.isEmpty())
                                 {
                                     castUpvote(position);
-                                    Drawable mDrawable = context.getResources().getDrawable(R.drawable.ic_upvote);
-                                    mDrawable.setColorFilter(new
-                                            PorterDuffColorFilter(0xffff00,PorterDuff.Mode.SRC_IN));
+
                                 }
                                 else
                                 {

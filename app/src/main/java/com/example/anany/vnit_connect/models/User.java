@@ -8,6 +8,15 @@ import java.util.ArrayList;
 
 public class User {
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String id;
     private String username, email;
     private ArrayList<String> interests = new ArrayList<>();
 
