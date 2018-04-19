@@ -116,6 +116,12 @@ public class AdminQues_descAdapter extends RecyclerView.Adapter<AdminQues_descAd
                 deleteQuestion(String.valueOf(question.getAutoId()), itemPosition);
             }
         });
+        holder.discard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                discardQuestion(String.valueOf(question.getAutoId()),itemPosition);
+            }
+        });
     }
 
     @Override
@@ -133,7 +139,7 @@ public class AdminQues_descAdapter extends RecyclerView.Adapter<AdminQues_descAd
         public AppCompatTextView date;
         public Button viewAnswer;
         public Button del;
-
+        public Button discard;
         public ImageView img;
 
 
@@ -148,6 +154,7 @@ public class AdminQues_descAdapter extends RecyclerView.Adapter<AdminQues_descAd
             img = (ImageView) view.findViewById(R.id.viewProfileImage);
             viewAnswer = (Button) view.findViewById(R.id.btn_view_answers);
             del = (Button) view.findViewById(R.id.btn_del);
+            discard = (Button) view.findViewById(R.id.btn_discard);
         }
     }
 
@@ -156,6 +163,21 @@ public class AdminQues_descAdapter extends RecyclerView.Adapter<AdminQues_descAd
         db.collection("questions")
                 .document(id)
                 .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        questionsList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, questionsList.size());
+
+                    }
+                });
+    }
+
+    private void discardQuestion(String id, final int position) {
+        db.collection("questions")
+                .document(id)
+                .update("abuse","false")
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
