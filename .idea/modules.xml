@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://C:\andd\VnitConnect-shivali_test (1)\VnitConnect-shivali_test\VnitConnect.iml" filepath="C:\andd\VnitConnect-shivali_test (1)\VnitConnect-shivali_test\VnitConnect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VnitConnect-maitreyeetest.iml" filepath="$PROJECT_DIR$/VnitConnect-maitreyeetest.iml" />
+      <module fileurl="file://C:\andd\VnitConnect-maitreyeetest\VnitConnect-maitreyeetest\VnitConnect-shivali_test.iml" filepath="C:\andd\VnitConnect-maitreyeetest\VnitConnect-maitreyeetest\VnitConnect-shivali_test.iml" />
+      <module fileurl="file://C:\andd\VnitConnect-shivali_test (1)\VnitConnect-shivali_test\Vnit_Connect.iml" filepath="C:\andd\VnitConnect-shivali_test (1)\VnitConnect-shivali_test\Vnit_Connect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\andd\VnitConnect-maitreyeetest\VnitConnect-maitreyeetest\app\app.iml" filepath="C:\andd\VnitConnect-maitreyeetest\VnitConnect-maitreyeetest\app\app.iml" />
+      <module fileurl="file://C:\andd\VnitConnect-shivali_test (1)\VnitConnect-shivali_test\app\app.iml" filepath="C:\andd\VnitConnect-shivali_test (1)\VnitConnect-shivali_test\app\app.iml" />
+    </modules>
+  </component>
+</project>

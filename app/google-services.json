@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "838095257322",
+    "firebase_url": "https://vnit-connect.firebaseio.com",
+    "project_id": "vnit-connect",
+    "storage_bucket": "vnit-connect.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838095257322:android:5076e60e9e7b52e9",
+        "android_client_info": {
+          "package_name": "com.example.anany.vnit_connect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838095257322-i6oko1bm8110ohtv61h4ir110lh5utba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDej-TdkYJ3eKiOmtyhCSNptHfnd5jlJ-s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
