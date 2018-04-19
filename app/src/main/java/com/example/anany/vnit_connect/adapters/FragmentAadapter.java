@@ -1,3 +1,4 @@
+
 package com.example.anany.vnit_connect.adapters;
 
 import android.content.Context;
@@ -7,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.anany.vnit_connect.AdminForumFragment;
 import com.example.anany.vnit_connect.ChatbotFragment;
-import com.example.anany.vnit_connect.AdminAnswerFragment;
+import com.example.anany.vnit_connect.AnswerFragment;
 import com.example.anany.vnit_connect.ForumFragment;
 
 /**
@@ -31,7 +32,7 @@ public class FragmentAadapter extends FragmentPagerAdapter {
             case 1:
                 return new AdminForumFragment();
             case 2:
-                return new AdminAnswerFragment();
+                return new AnswerFragment();
         }
         return null;
     }
@@ -58,3 +59,4 @@ public class FragmentAadapter extends FragmentPagerAdapter {
     }
 
 }
+

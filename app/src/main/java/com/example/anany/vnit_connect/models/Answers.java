@@ -9,6 +9,7 @@ import java.util.Date;
 public class Answers {
 
     private int qid,upvotes,downvotes;
+<<<<<<< HEAD
     private String answer;
     private String user;
     private String aid;
@@ -22,6 +23,9 @@ public class Answers {
     }
 
     private String abuse;
+=======
+    private String answer, user,aid;
+>>>>>>> e4edaf600ad7e684615ba5d293df418011ddd0a4
     Date timestamp = new Date();
 
     public Answers(String aid, int qid, int upvotes, int downvotes, String answer, String user, Date timestamp) {

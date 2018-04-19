@@ -146,6 +146,7 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
 
             }
         });
+
         holder.btn_report_abuse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,6 +160,7 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
                         });
             }
         });
+
     }
 
     @Override
@@ -177,6 +179,7 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
         public ImageView img;
         public Button btn_upvote;
         public Button btn_downvote;
+
         public Button btn_report_abuse;
 
 
@@ -191,7 +194,9 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
             img = (ImageView) view.findViewById(R.id.viewProfileImage);
             btn_upvote = (Button) view.findViewById(R.id.castUpvote);
             btn_downvote = (Button) view.findViewById(R.id.castDownvote);
+
             btn_report_abuse = (Button) view.findViewById(R.id.btn_report_abuse);
+
         }
     }
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -25,3 +26,35 @@
     </item>
 
 </menu>
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_bot"
+            android:icon="@drawable/ic_forum_white_24px"
+            android:title="CHATBOT" />
+        <item
+            android:id="@+id/nav_forum"
+            android:icon="@drawable/ic_forum_white_24px"
+            android:title="QUESTIONS" />
+        <item
+            android:id="@+id/nav_ans"
+            android:icon="@drawable/ic_forum_white_24px"
+            android:title="ANSWERS" />
+    </group>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_exit_to_app_white_24px"
+                android:title="Logout" />
+        </menu>
+    </item>
+
+</menu>
+>>>>>>> e4edaf600ad7e684615ba5d293df418011ddd0a4

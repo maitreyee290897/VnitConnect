@@ -15,6 +15,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="0dp">
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8dac0fe5c3c4c688a45ea4afe65bdb9f61f4012f
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -22,6 +26,10 @@
                 android:background="#691A99"
                 app:layout_scrollFlags="scroll|enterAlways"
                 />
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8dac0fe5c3c4c688a45ea4afe65bdb9f61f4012f
         </android.support.design.widget.AppBarLayout>-->
 
         <ProgressBar
@@ -48,5 +56,6 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
+
 
 </FrameLayout>

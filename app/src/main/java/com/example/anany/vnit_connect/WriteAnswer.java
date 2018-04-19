@@ -115,8 +115,8 @@ public class WriteAnswer extends AppCompatActivity{
         a.setUpvotes(0);
         a.setUser(username);
         a.setTimestamp(date);
-        a.setAbuse("false");
 
+        a.setAbuse("false");
 
         //adding new question to database
         db.collection("answers")

@@ -82,7 +82,8 @@ public class AnswerFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         getAllAnswers();
 
-        firestoreListener = db.collection("answers").whereEqualTo("abuse","true")
+
+       firestoreListener = db.collection("answers").whereEqualTo("abuse","true")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
