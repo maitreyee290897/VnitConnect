@@ -34,11 +34,11 @@
         android:layout_marginTop="80dp"></android.support.v4.view.ViewPager>
 
     <include layout="@layout/content_landing_page_admin"
-      />
- <!--   <include
-        layout="@layout/content_landing_page_admin"
-        android:layout_height="439dp"
-        tools:layout_editor_absoluteY="128dp" /> -->
+        />
+    <!--   <include
+           layout="@layout/content_landing_page_admin"
+           android:layout_height="439dp"
+           tools:layout_editor_absoluteY="128dp" /> -->
 
 
 </android.support.design.widget.CoordinatorLayout>

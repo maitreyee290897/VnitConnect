@@ -131,6 +131,10 @@ public class LandingPageAdmin extends AppCompatActivity
             if(value.equals("1")){
                 vp_pages.setCurrentItem(1);
             }
+            if(value.equals("2")){
+                vp_pages.setCurrentItem(2);
+            }
+
         }
 
 
@@ -212,9 +216,13 @@ public class LandingPageAdmin extends AppCompatActivity
          if (id == R.id.nav_forum) {
             vp_pages.setCurrentItem(1);
         }
-        else if (id == R.id.nav_profile) {
-            startActivity(new Intent(LandingPageAdmin.this, EditProfileActivity.class));
+        if(id== R.id.nav_ans)
+        {
+            vp_pages.setCurrentItem(2);
         }
+        /*else if (id == R.id.nav_profile) {
+            startActivity(new Intent(LandingPageAdmin.this, EditProfileActivity.class));
+        }*/
         else if (id == R.id.nav_logout) {
 
             auth.signOut();
