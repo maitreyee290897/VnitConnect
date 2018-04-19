@@ -9,7 +9,19 @@ import java.util.Date;
 public class Answers {
 
     private int qid,upvotes,downvotes;
-    private String answer, user,aid;
+    private String answer;
+    private String user;
+    private String aid;
+
+    public String getAbuse() {
+        return abuse;
+    }
+
+    public void setAbuse(String abuse) {
+        this.abuse = abuse;
+    }
+
+    private String abuse;
     Date timestamp = new Date();
 
     public Answers(String aid, int qid, int upvotes, int downvotes, String answer, String user, Date timestamp) {
