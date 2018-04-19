@@ -85,7 +85,7 @@ public class EditProfileActivity extends AppCompatActivity
         changePassword = (Button) findViewById(R.id.changePass);
         sendEmail = (Button) findViewById(R.id.send);
         remove = (Button) findViewById(R.id.remove);
-        signOut = (Button) findViewById(R.id.sign_out);
+        //signOut = (Button) findViewById(R.id.sign_out);
 
         password = (EditText) findViewById(R.id.password);
         newPassword = (EditText) findViewById(R.id.newPassword);
@@ -203,12 +203,7 @@ public class EditProfileActivity extends AppCompatActivity
             }
         });
 
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-            }
-        });
+
 
     }
 
