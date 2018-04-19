@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.anany.vnit_connect.AdminForumFragment;
 import com.example.anany.vnit_connect.ChatbotFragment;
+import com.example.anany.vnit_connect.AdminAnswerFragment;
 import com.example.anany.vnit_connect.ForumFragment;
 
 /**
@@ -29,13 +30,15 @@ public class FragmentAadapter extends FragmentPagerAdapter {
                 return new ChatbotFragment();
             case 1:
                 return new AdminForumFragment();
+            case 2:
+                return new AdminAnswerFragment();
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -45,7 +48,10 @@ public class FragmentAadapter extends FragmentPagerAdapter {
             case 0:
                 return "Chatbot";
             case 1:
-                return "Forum";
+                return "Questions";
+            case 2:
+                return "Answers";
+
             default:
                 return null;
         }
