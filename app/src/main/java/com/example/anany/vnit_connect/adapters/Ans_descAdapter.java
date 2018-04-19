@@ -80,7 +80,7 @@ public class Ans_descAdapter extends RecyclerView.Adapter<Ans_descAdapter.MyView
 
         holder.img.setImageDrawable(drawable);
         holder.ans.setText(answer.getAnswer());
-        holder.date.setText(answer.getTimestamp().toString());
+        holder.date.setText(answer.getTimestamp().toString().substring(0,19));
         holder.user.setText(answer.getUser());
         holder.uvote.setText(String.valueOf(answer.getUpvotes()));
         holder.dvote.setText(String.valueOf(answer.getDownvotes()));

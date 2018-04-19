@@ -15,33 +15,52 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#691A99"
+            android:background="#09151A"
             app:titleTextColor="@android:color/white"
             app:layout_scrollFlags="scroll|enterAlways"
             />
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:gravity="bottom"
-        >
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/question"
-            android:layout_width="match_parent"
-            android:layout_height="57dp"
-            android:hint="   type your question here..."
-            android:lines="3"
-            android:inputType="textMultiLine"
-            android:maxLines="4"
-            android:selectAllOnFocus="false"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="310dp"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:layout_weight="3">
+
+            <EditText
+                android:id="@+id/question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="   New Question"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:maxLines="4"
+                android:minLines="3"
+                android:selectAllOnFocus="false"
+                android:singleLine="true"
+                android:textColor="@android:color/black"
+
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/search_ques_button"
+            style="?android:textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:drawableTop="@drawable/ic_search"
+            android:background="@color/white"
+            android:layout_weight="1"
             />
-    </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,27 +69,10 @@
         android:layout_gravity="center">
 
         <Button
-            android:id="@+id/search_ques_button"
-            style="?android:textAppearanceSmall"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#E6000000"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:text="search"
-            android:textColor="@android:color/white"
-            android:bottomRightRadius="50dp"
-            android:bottomLeftRadius="10dp"
-            android:topLeftRadius="10dp"
-            android:topRightRadius="10dp"
-            android:textStyle="bold"
-            />
-        <Button
             android:id="@+id/ask_ques_button"
             style="?android:textAppearanceSmall"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
             android:background="#E6000000"
             android:padding="@dimen/activity_horizontal_margin"
             android:text="ask"
@@ -80,11 +82,10 @@
             android:topLeftRadius="10dp"
             android:topRightRadius="10dp"
             android:textStyle="bold"
+            android:layout_gravity="center"
             />
 
-
     </LinearLayout>
-
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -94,6 +95,12 @@
         android:layout_marginBottom="20dp"
         android:visibility="gone" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewSearch"
+        app:layoutManager="LinearLayoutManager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 
 </LinearLayout>

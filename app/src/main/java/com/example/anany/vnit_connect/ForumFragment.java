@@ -93,6 +93,7 @@ public class ForumFragment extends Fragment {
 
                         for (DocumentSnapshot doc : documentSnapshots) {
                             Question q = doc.toObject(Question.class);
+                            q.setAutoId(doc.getId());
                             quesList.add(q);
                         }
 
@@ -131,11 +132,18 @@ public class ForumFragment extends Fragment {
                             Log.d(TAG,"onSuccess: LIST EMPTY");
                         }
                         else {
-                            List<Question> list = queryDocumentSnapshots.toObjects(Question.class);
+                            List<Question> quesList = new ArrayList<>();
 
-                            System.out.println(list.size());
+                            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                                Question q = doc.toObject(Question.class);
+                                q.setAutoId(doc.getId());
+                                quesList.add(q);
+                            }
+
+
+                            System.out.println(quesList.size());
                             //System.out.println("ques fetched : " + questionsList.get(0).getQuestion());
-                            qList.addAll(list);
+                            qList.addAll(quesList);
                             System.out.println(qList.size());
                             System.out.println("ques fetched : " + qList.get(0).getQuestion());
                             Log.d(TAG, "onSuccess" + qList);
@@ -145,6 +153,7 @@ public class ForumFragment extends Fragment {
                         recyclerViewQuestions.setLayoutManager(mLayoutManager);
                         recyclerViewQuestions.setItemAnimator(new DefaultItemAnimator());
                         recyclerViewQuestions.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
                     }
                 })

@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.anany.vnit_connect.R;
 import com.example.anany.vnit_connect.ViewAnswers;
+import com.example.anany.vnit_connect.WriteAnswer;
 import com.example.anany.vnit_connect.models.Question;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -65,7 +68,7 @@ public class Ques_descAdapter extends RecyclerView.Adapter<Ques_descAdapter.MyVi
 
         holder.img.setImageDrawable(drawable);
         holder.question.setText(question.getQuestion());
-        holder.date.setText(question.getTimestamp().toString());
+        holder.date.setText(question.getTimestamp().toString().substring(0,19));
         holder.user.setText(question.getUser());
         holder.viewAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +78,30 @@ public class Ques_descAdapter extends RecyclerView.Adapter<Ques_descAdapter.MyVi
                 ansIntent.putExtra("QID",question.getQid());
                 ansIntent.putExtra("QUESTION",question.getQuestion());
                 context.startActivity(ansIntent);
+            }
+        });
+        holder.writeAnswer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent ansIntent = new Intent(context , WriteAnswer.class);
+                //This sends the email of the user to the new activity
+                ansIntent.putExtra("QID",question.getQid());
+                ansIntent.putExtra("QUESTION",question.getQuestion());
+                context.startActivity(ansIntent);
+
+            }
+        });
+        holder.reportAbuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.collection("questions").document(question.getAutoId())
+                        .update("abuse","true")
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(context,"You have marked this as abuse",Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
     }
@@ -91,6 +118,8 @@ public class Ques_descAdapter extends RecyclerView.Adapter<Ques_descAdapter.MyVi
         public AppCompatTextView user;
         public AppCompatTextView date;
         public Button viewAnswer;
+        public Button writeAnswer;
+        public Button reportAbuse;
         public ImageView img;
 
 
@@ -102,7 +131,8 @@ public class Ques_descAdapter extends RecyclerView.Adapter<Ques_descAdapter.MyVi
             question = (AppCompatTextView) view.findViewById(R.id.textViewQuestion);
             img = (ImageView) view.findViewById(R.id.viewProfileImage);
             viewAnswer = (Button) view.findViewById(R.id.btn_view_answers);
-
+            writeAnswer = (Button) view.findViewById(R.id.btn_write_answer);
+            reportAbuse = (Button) view.findViewById(R.id.btn_report_abuse);
         }
     }
 }
