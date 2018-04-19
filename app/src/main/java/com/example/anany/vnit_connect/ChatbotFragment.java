@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -35,77 +33,91 @@ import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 
+import com.example.anany.vnit_connect.models.ChatHolder;
 import com.example.anany.vnit_connect.models.ChatMessage;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.Query;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class ChatbotFragment extends Fragment implements AIListener {
 
-    protected View mView;
     private Context context;
-    private Button listenButton;
     private TextView resultTextView;
     private AIService aiService;
+    private AIConfiguration config;
+    private AIDataService aiDataService;
+    private AIRequest aiRequest;
+    private View view;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private EditText editText;
+    private RelativeLayout addBtn;
+    private DatabaseReference ref;
+    private Boolean flagFab = true;
+    private FirebaseRecyclerAdapter adapter;
+    private FirebaseRecyclerAdapter welcomeAdapter;
+    private Query welcomeQuery;
+    private Query query;
+    private String uid, email, name;
+    private FirebaseFirestore db;
+    private FirebaseUser user;
+    private ChatMessage welcomeMsg;
 
-    RecyclerView recyclerView;
-    EditText editText;
-    RelativeLayout addBtn;
-    DatabaseReference ref;
-    FirebaseRecyclerAdapter<ChatMessage,ChatHolder> adapter;
-    Boolean flagFab = true;
 
     public ChatbotFragment() {
         // Required empty public constructor
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(TAG, "oncreateView hello!");
 
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
-        final View view = inflater.inflate(R.layout.fragment_chatbot, container, false);
-        this.mView = view;
-        context = getActivity();
+        view = inflater.inflate(R.layout.fragment_chatbot, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        context = getActivity();
         editText = view.findViewById(R.id.editText);
         addBtn = view.findViewById(R.id.addBtn);
-
+        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        if (user != null) {
+            email = user.getEmail();
+            uid = user.getUid();
+            System.out.println(uid);
+            name = user.getDisplayName();
+
+        }
+
+        configureAI();
+
+        //Get firebase reference
         ref = FirebaseDatabase.getInstance().getReference();
         ref.keepSynced(true);
 
-        final AIConfiguration config = new AIConfiguration("b2a471c1338945f9844fdf71ba08ab81",
-                AIConfiguration.SupportedLanguages.English,
-                AIConfiguration.RecognitionEngine.System);
-        aiService = AIService.getService(context, config);
-        aiService.setListener(this);
 
-        final AIDataService aiDataService = new AIDataService(config);
-        final AIRequest aiRequest = new AIRequest();
-
-        //----------------------------------------
-        //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},1);
-        //-------------------------
-
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("chats")
-                .limitToLast(50);
+        query = ref.child(uid).limitToLast(50);
         FirebaseRecyclerOptions<ChatMessage> options =
                 new FirebaseRecyclerOptions.Builder<ChatMessage>()
                         .setQuery(query, ChatMessage.class)
                         .build();
 
+
+        //Button listener
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +126,8 @@ public class ChatbotFragment extends Fragment implements AIListener {
                 if (!message.equals("")) {
 
                     ChatMessage chatMessage = new ChatMessage(message, "user");
-                    ref.child("chat").push().setValue(chatMessage);
+                    ref.child(uid).push().setValue(chatMessage);
+                    adapter.notifyDataSetChanged();
 
                     aiRequest.setQuery(message);
                     new AsyncTask<AIRequest,Void,AIResponse>(){
@@ -136,7 +149,9 @@ public class ChatbotFragment extends Fragment implements AIListener {
                                 Result result = response.getResult();
                                 String reply = result.getFulfillment().getSpeech();
                                 ChatMessage chatMessage = new ChatMessage(reply, "bot");
-                                ref.child("chat").push().setValue(chatMessage);
+                                ref.child(uid).push().setValue(chatMessage);
+                                adapter.notifyDataSetChanged();
+
                             }
                         }
                     }.execute(aiRequest);
@@ -150,7 +165,10 @@ public class ChatbotFragment extends Fragment implements AIListener {
             }
         });
 
+
+        //Textbox listener
         editText.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -158,6 +176,8 @@ public class ChatbotFragment extends Fragment implements AIListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Log.e(TAG, "!!!On editText changed!!!");
+
                 ImageView fab_img = view.findViewById(R.id.fab_img);
                 Bitmap img = BitmapFactory.decodeResource(getResources(),R.drawable.ic_send_white_24dp);
                 Bitmap img1 = BitmapFactory.decodeResource(getResources(),R.drawable.ic_mic_white_24dp);
@@ -171,7 +191,6 @@ public class ChatbotFragment extends Fragment implements AIListener {
                     ImageViewAnimatedChange(context,fab_img,img1);
                     flagFab=true;
                 }
-
             }
 
             @Override
@@ -181,12 +200,14 @@ public class ChatbotFragment extends Fragment implements AIListener {
         });
 
 
-        final FirebaseRecyclerAdapter adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatHolder>(options) {
 
             @Override
             public ChatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                // Create a new instance of the ViewHolder, in this case we are using a custom
-                // layout called R.layout.message for each item
+                Log.e(TAG, "!!!Inside adapter onCreate!!!");
+
+                // Create a new instance of the ViewHolder using a custom
+                // layout called R.layout.msglist for each item
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.msglist, parent, false);
 
@@ -194,62 +215,27 @@ public class ChatbotFragment extends Fragment implements AIListener {
             }
 
             @Override
-            protected void onBindViewHolder(ChatHolder holder, int position, ChatMessage model) {
+            protected void onBindViewHolder(ChatHolder viewHolder, int position, ChatMessage model) {
+
                 // Bind the Chat object to the ChatHolder
-                // ...
-            }
-
-            protected void populateViewHolder(ChatHolder viewHolder, ChatMessage model, int position) {
-
                 if (model.getMsgUser().equals("user")) {
 
-
                     viewHolder.rightText.setText(model.getMsgText());
-
                     viewHolder.rightText.setVisibility(View.VISIBLE);
                     viewHolder.leftText.setVisibility(View.GONE);
+
                 }
                 else {
-                    viewHolder.leftText.setText(model.getMsgText());
 
+                    viewHolder.leftText.setText(model.getMsgText());
                     viewHolder.rightText.setVisibility(View.GONE);
                     viewHolder.leftText.setVisibility(View.VISIBLE);
+
                 }
+
             }
         };
 
-        /*adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatHolder>(ChatMessage.class, R.layout.msglist, ChatHolder.class, ref.child("chat")) {
-
-
-            @NonNull
-            @Override
-            public ChatHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return null;
-            }
-
-            @Override
-            protected void onBindViewHolder(@NonNull ChatHolder holder, int position, @NonNull ChatMessage model) {
-
-            }
-
-            protected void populateViewHolder(ChatHolder viewHolder, ChatMessage model, int position) {
-
-                if (model.getMsgUser().equals("user")) {
-
-
-                    viewHolder.rightText.setText(model.getMsgText());
-
-                    viewHolder.rightText.setVisibility(View.VISIBLE);
-                    viewHolder.leftText.setVisibility(View.GONE);
-                }
-                else {
-                    viewHolder.leftText.setText(model.getMsgText());
-
-                    viewHolder.rightText.setVisibility(View.GONE);
-                    viewHolder.leftText.setVisibility(View.VISIBLE);
-                }
-            }
-        };*/
 
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -262,19 +248,55 @@ public class ChatbotFragment extends Fragment implements AIListener {
                 if (lastVisiblePosition == -1 ||
                         (positionStart >= (msgCount - 1) &&
                                 lastVisiblePosition == (positionStart - 1))) {
-                    recyclerView.scrollToPosition(positionStart);
+                    recyclerView.smoothScrollToPosition(positionStart);
 
                 }
+                adapter.notifyDataSetChanged();
 
             }
         });
 
+        /*adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                Log.d(TAG, "onItemRangeInserted: fired -itemcount " +adapter.getItemCount());
+                recyclerView.smoothScrollToPosition(adapter.getItemCount());
+            }
+        });*/
+
         recyclerView.setAdapter(adapter);
 
+        adapter.startListening();
+
+        welcomeMsg = new ChatMessage("Hey! How may I help you?","bot");
+        ref.child(uid).push().setValue(welcomeMsg);
+
+        adapter.notifyDataSetChanged();
         return view;
+
     }
 
+
+    /*
+    //Setup our Dialogflow agent
+    */
+    private void configureAI() {
+
+        config = new AIConfiguration("b2a471c1338945f9844fdf71ba08ab81",
+                AIConfiguration.SupportedLanguages.English,
+                AIConfiguration.RecognitionEngine.System);
+        aiService = AIService.getService(context, config);
+        aiService.setListener(this);
+
+        aiDataService = new AIDataService(config);
+        aiRequest = new AIRequest();
+
+    }
+
+
     public void ImageViewAnimatedChange(Context c, final ImageView v, final Bitmap new_image) {
+
         final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.zoom_out);
         final Animation anim_in  = AnimationUtils.loadAnimation(c, R.anim.zoom_in);
         anim_out.setAnimationListener(new Animation.AnimationListener()
@@ -293,29 +315,30 @@ public class ChatbotFragment extends Fragment implements AIListener {
             }
         });
         v.startAnimation(anim_out);
+
     }
+
 
     @Override
     public void onResult(ai.api.model.AIResponse response) {
-
 
         Result result = response.getResult();
 
         String message = result.getResolvedQuery();
         ChatMessage chatMessage0 = new ChatMessage(message, "user");
-        ref.child("chat").push().setValue(chatMessage0);
+        ref.child(uid).push().setValue(chatMessage0);
 
 
         String reply = result.getFulfillment().getSpeech();
         ChatMessage chatMessage = new ChatMessage(reply, "bot");
-        ref.child("chat").push().setValue(chatMessage);
-
+        ref.child(uid).push().setValue(chatMessage);
 
     }
 
+
     @Override
     public void onError(final AIError error) {
-        resultTextView.setText(error.toString());
+        //resultTextView.setText(error.toString());
     }
 
     @Override
@@ -337,4 +360,5 @@ public class ChatbotFragment extends Fragment implements AIListener {
     public void onListeningFinished() {
 
     }
+
 }
