@@ -60,6 +60,7 @@
             android:layout_margin="8dp"
             android:background="#000000"
             android:src="@drawable/ic_add"
+            app:backgroundTint="@color/Darker"
             app:borderWidth="0dp"
             app:elevation="6dp"
             app:pressedTranslationZ="12dp" />

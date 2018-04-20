@@ -17,9 +17,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#09151A"
-            app:layout_scrollFlags="scroll|enterAlways"
-            />
+            android:background="@color/Darker"
+            app:layout_scrollFlags="scroll|enterAlways" />
         <!--app:popupTheme="@style/AppTheme.PopupOverlay"-->
 
     </android.support.design.widget.AppBarLayout>
@@ -39,6 +38,7 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:focusableInTouchMode="true"
             android:hint="@string/prompt_password"
             android:imeActionId="@+id/login"
@@ -51,6 +51,9 @@
             android:id="@+id/newPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:focusableInTouchMode="true"
             android:hint="@string/new_pass"
             android:imeActionId="@+id/login"
@@ -65,10 +68,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/Orange"
             android:text="@string/btn_change"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -82,11 +86,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/Orange"
             android:text="@string/btn_remove"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            />
+            android:layout_gravity="center"/>
 
         <Button
             android:id="@+id/change_password_button"
@@ -94,11 +98,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@color/Blue"
             android:text="@string/change_password"
-            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:background="@android:color/black"
-            />
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/sending_pass_reset_button"
@@ -106,32 +109,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@color/Blue"
             android:text="@string/send_password_reset_email"
-            android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:background="@android:color/black"
-             />
+            android:textStyle="bold" />
 
-        <Button
+        <!--<Button
             android:id="@+id/sign_out"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@android:color/black"
+            android:background="@color/Blue"
             android:text="@string/btn_sign_out"
             android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold" />-->
         <Button
             android:id="@+id/remove_user_button"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="25dp"
+            android:background="@color/Light"
             android:text="delete my account"
-            android:textStyle="bold"
-            android:background="@color/colorPrimary"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

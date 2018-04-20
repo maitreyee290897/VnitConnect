@@ -75,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnRemoveUser = (Button) findViewById(R.id.remove_user_button);
         changePassword = (Button) findViewById(R.id.changePass);
         remove = (Button) findViewById(R.id.remove);
-        signOut = (Button) findViewById(R.id.sign_out);
+        //signOut = (Button) findViewById(R.id.sign_out);
 
         password = (EditText) findViewById(R.id.password);
         newPassword = (EditText) findViewById(R.id.newPassword);
@@ -170,12 +170,12 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        signOut.setOnClickListener(new View.OnClickListener() {
+        /*signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signOut();
             }
-        });
+        });*/
 
     }
 

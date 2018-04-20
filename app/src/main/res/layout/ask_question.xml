@@ -15,10 +15,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#09151A"
-            app:titleTextColor="@android:color/white"
+            android:background="@color/Darker"
             app:layout_scrollFlags="scroll|enterAlways"
-            />
+            app:titleTextColor="@android:color/white" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -28,11 +27,13 @@
         android:orientation="horizontal">
 
         <android.support.design.widget.TextInputLayout
-            android:layout_width="310dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="4"
             android:gravity="bottom"
-            android:padding="@dimen/activity_horizontal_margin"
-            android:layout_weight="3">
+            android:paddingBottom="15dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp">
 
             <EditText
                 android:id="@+id/question"
@@ -53,37 +54,36 @@
         <Button
             android:id="@+id/search_ques_button"
             style="?android:textAppearanceSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:drawableTop="@drawable/ic_search"
-            android:background="@color/white"
+            android:layout_marginTop="60dp"
             android:layout_weight="1"
-            />
+            android:background="@color/white"
+            android:drawableTop="@drawable/ic_search" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/ask_ques_button"
             style="?android:textAppearanceSmall"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:background="#E6000000"
+            android:layout_gravity="center"
+            android:background="@color/Blue"
+            android:bottomLeftRadius="10dp"
+            android:bottomRightRadius="50dp"
             android:padding="@dimen/activity_horizontal_margin"
             android:text="ask"
             android:textColor="@android:color/white"
-            android:bottomRightRadius="50dp"
-            android:bottomLeftRadius="10dp"
-            android:topLeftRadius="10dp"
-            android:topRightRadius="10dp"
             android:textStyle="bold"
-            android:layout_gravity="center"
-            />
+            android:topLeftRadius="10dp"
+            android:topRightRadius="10dp" />
 
     </LinearLayout>
 
@@ -97,10 +97,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewSearch"
-        app:layoutManager="LinearLayoutManager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:layout_marginTop="15dp"
+        app:layoutManager="LinearLayoutManager" />
 
 
 </LinearLayout>

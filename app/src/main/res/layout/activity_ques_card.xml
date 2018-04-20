@@ -17,14 +17,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
 
-                <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:id="@+id/viewProfileImage"
-                    android:layout_marginLeft="0dp"
-                    />
+            <ImageView
+                android:id="@+id/viewProfileImage"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginLeft="0dp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,10 +43,9 @@
                     android:textStyle="bold" />
 
 
+            </LinearLayout>
 
-        </LinearLayout>
-
-        <!--<LinearLayout
+            <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -65,7 +65,6 @@
                 android:text="QID"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>-->
-
 
 
         </LinearLayout>
@@ -131,9 +130,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal"
-            >
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_view_answers"
@@ -141,24 +139,26 @@
                 android:layout_height="30dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_marginRight="70dp"
                 android:background="@null"
                 android:drawableLeft="@drawable/ic_view"
-                android:text="view answers"
+                android:text="View Answers"
                 android:textAllCaps="false"
-                android:textColor="@color/btn_login"
-                android:textSize="15dp"/>
+                android:textColor="@color/Blue"
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/btn_write_answer"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_gravity="right"
+                android:layout_marginRight="0dp"
                 android:background="@null"
-                android:text="write answer"
                 android:drawableLeft="@drawable/ic_action_name"
+                android:text="Write Answer"
                 android:textAllCaps="false"
-                android:textColor="@color/btn_login"
-                android:textSize="15dp"/>
+                android:textColor="@color/Blue"
+                android:textSize="15dp" />
 
 
         </LinearLayout>
@@ -167,13 +167,14 @@
             android:id="@+id/btn_report_abuse"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:background="@null"
-            android:text="report abuse"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:background="@null"
+            android:text="Report Abuse"
             android:textAllCaps="false"
             android:textColor="@color/btn_login"
-            android:textSize="12dp"/>
+            android:textSize="12dp" />
 
 
 

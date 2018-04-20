@@ -40,7 +40,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
     private EditText inputEmail, inputPassword, inputUsername;
-    private Button btnSignIn, btnSignUp, btnResetPassword;
+    private Button btnSignIn, btnSignUp;// btnResetPassword;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
@@ -65,14 +65,14 @@ public class SignupActivity extends AppCompatActivity {
         inputPassword = (EditText) findViewById(R.id.password);
         inputUsername = (EditText) findViewById(R.id.username);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
+        //btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
 
-        btnResetPassword.setOnClickListener(new View.OnClickListener() {
+        /*btnResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SignupActivity.this, ResetPasswordActivity.class));
             }
-        });
+        });*/
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
