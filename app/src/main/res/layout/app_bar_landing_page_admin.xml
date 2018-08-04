@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.anany.vnit_connect.LandingPageAdmin">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:background="@color/Darker"
+            app:popupTheme="@style/PopupOverlay" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tbl_pages"
+            style="@style/MyCustomTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="41dp" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_pages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"></android.support.v4.view.ViewPager>
+
+    <include layout="@layout/content_landing_page_admin"
+        />
+    <!--   <include
+           layout="@layout/content_landing_page_admin"
+           android:layout_height="439dp"
+           tools:layout_editor_absoluteY="128dp" /> -->
+
+
+</android.support.design.widget.CoordinatorLayout>
